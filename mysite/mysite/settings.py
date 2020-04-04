@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'vietnam_research.apps.VietnamResearchConfig',
     'gmarker.apps.GmarkerConfig',
+    'shopping.apps.ShoppingConfig',
 ]
 
 MIDDLEWARE = [

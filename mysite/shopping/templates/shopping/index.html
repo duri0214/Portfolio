@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43097095-9"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-43097095-9');
+        </script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>shopping</title>
+        
+        <!-- css -->
+        <link rel="stylesheet" href="{% static 'shopping/css/reset.css' %}">
+        <link rel="stylesheet" href="{% static 'shopping/css/index.css' %}">
+
+        <!-- javascript -->
+        <script src="{% static 'shopping/js/script.js' %}"></script>
+
+        <!-- font -->
+        <link href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic" rel="stylesheet">
+        <!-- fontawesome -->
+        <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+        <!-- for ajax -->
+        <script>let myurl = {"base": "{% url 'shp:index' %}"}</script>
+
+    </head>
+
+    <body>
+        <h1>shopping</h1>
+    </body>
+</html>
