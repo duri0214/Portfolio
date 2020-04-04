@@ -1,7 +1,7 @@
 # Portfolio
-## VNM
+## vietnam_research
 
-ベトナムの統計を取り込み、まとめ、html表示
+vietnam statistics
 
 ## gmarker
 
