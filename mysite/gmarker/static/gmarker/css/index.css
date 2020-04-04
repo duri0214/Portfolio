@@ -1,0 +1,111 @@
+/* header */
+h1 {
+    display: none;
+}
+h2 {
+    border-left: 5px solid #415db9;
+    background-color: #c6ddff;
+    padding: 10px;
+    font-size: 20px;
+    color: gray;
+}
+h2::before {
+    /* checkmark */
+    font-family: "Font Awesome 5 Free";
+    content: '\f00c'; 
+    font-weight: 900;
+    padding: 10px;
+}
+h3 {
+    border-left: solid 3px #415db9;
+    padding-left: 14px;
+    font-size: 16px;
+}
+
+
+
+
+/* card design */
+.cards ul {
+    margin: 30px;
+    padding: 0px;
+}
+.cards li {
+    display: inline-block;
+    list-style: none;
+}
+.card {
+    width: 300px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px #ccc;
+}
+.card-img {
+    display: block;
+    margin: auto;
+}
+
+.card-content {
+    padding: 20px;
+}
+.card-title {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #333;
+}
+.card-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #777;
+}
+.card-link {
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding: 20px;
+}
+.card-link a {
+    text-decoration: none;
+    color: #0bd;
+    margin: 0 10px;
+}
+.card-link a:hover {
+    color: #0090aa;
+}
+
+/* specific_form */
+ul.specific_form {
+    list-style: none;
+}
+.specific_form li {
+    margin: 10px;
+}
+.specific_form label {
+    display:block;
+    float: left;
+    width: 70px;
+}
+.specific_form .btn-flat-border {
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: #67c5ff;
+    border: solid 2px #67c5ff;
+    border-radius: 3px;
+    transition: .4s;
+}
+.specific_form input[type="submit"] {
+    margin-right: 20px;
+}
+
+#shopinfomation {
+    background-color: #415db9;
+    width: 200px;
+    height: 500px;
+    color: white;
+    font-size: small;
+}
+.wrapper {
+    display: flex;
+    width: 700px;
+    height: 500px;
+}

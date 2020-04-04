@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+h2 {
+  padding: 10px;
+  color: #494949;
+  background: #fffaf4;
+  border-left: solid 5px #ffaf58;
+}
+h2:before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f00c";
+  padding: 10px;
+}
+
+form {
+  margin: 20px;
+}
+
+th, td {
+  padding: 10px;
+}
+
+.centering {
+  margin: auto;
+  padding: 200px 0px 0px;
+  width: 400px;
+}

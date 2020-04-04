@@ -1,0 +1,198 @@
+@charset "UTF-8";
+
+body {
+  margin: 20;
+  padding: 0;
+  color: #333;
+  font-family: "Sawarabi Gothic";
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  line-height: 1.5; /* 行高 */
+    
+}
+
+a {
+  color: #333;
+}
+a:visited {
+  color: #333;
+}
+a:hover {
+  color: #333;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+h2 {
+  background: #fff;
+  font-size: 20px;
+  padding: 8px 22px;
+  border-radius: 2px;
+  border: 1px solid #fa9786;
+}
+h3 {
+  font-size: 16px;
+  border-left: solid 3px #fa9786;
+  padding: 4px 9px 4px 14px;
+}
+.marker {
+  background: linear-gradient(transparent 70%, yellow);
+}
+
+.wrapper {
+  width: 800px;
+}
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+#nav ul {
+  font-size: 0;
+  list-style: none;
+  margin-bottom: 40px;
+  padding: 0;
+}
+#nav ul li { 
+  font-size: 14px;
+  display: inline-block;
+  width: 399.5px;
+  margin-right: 1px;
+  text-align: center;
+}
+#nav ul li a {
+  display: block;
+  padding: 10px 16px;
+  background-color: #f0573e;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color .2s linear;
+}
+#nav ul li.current a {
+  background-color: #fa9786;
+}
+#nav ul li a:hover {
+  background-color: #fa9786;
+}
+
+/* form */
+.cp_iptxt {
+	position: relative;
+	width: 30%;
+	margin: 40px 3%;
+}
+.cp_iptxt input[type=text] {
+	font: 15px/24px sans-serif;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 8px 0;
+	padding: 0.3em;
+	transition: 0.3s;
+	border: 1px solid #1b2538;
+	border-radius: 4px;
+	outline: none;
+}
+.cp_iptxt input[type=text]:focus {
+	border-color: #da3c41;
+}
+.cp_iptxt input[type=text] {
+	padding-left: 40px;
+}
+.cp_iptxt i {
+	position: absolute;
+	top: 8px;
+	left: 0;
+	padding: 9px 8px;
+	transition: 0.3s;
+	color: #aaaaaa;
+}
+.cp_iptxt input[type=text]:focus + i {
+	color: #da3c41;
+}
+
+#point figure {
+  float: right;
+  margin-top: 0px;
+  margin-left: 16px;
+  margin-right: 0px;
+}
+#point figcaption {
+  font-size: 12px;
+  color: #9C9689;
+  text-align: center;
+}
+
+#news {
+  width: 800px;
+}
+#news li a {
+  margin-left: 15px;
+}
+#news ol {
+  counter-reset:number;
+  list-style-type: none!important; /*数字を一旦消す*/
+  padding: 0.3em 0.8em;
+  border: solid 2px #fa9786;
+}
+#news ol li {
+  border-bottom: dashed 1px fa9786;
+  position: relative;
+  padding: 0.5em 0.5em 0.5em 30px;
+  line-height: 1.5em;
+}
+#news ol li:before {
+  position: absolute;
+  counter-increment: number;
+  content: counter(number);
+  /*数字のデザイン変える*/
+  display:inline-block;
+  background: #fa9786;
+  color: white;
+  font-weight:bold;
+  border-radius: 50%;
+  left: 0;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  /*以下 上下中央寄せのため*/
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+#news ol li:last-of-type {
+  border-bottom: none; /*最後のliの線だけ消す*/
+}
+
+footer #footer_navi ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+footer {
+  background-color: #f0573e;
+  width: 800px;
+  text-align: center;
+}
+footer #footer_navi {
+  background-color: #f8aea1;
+  padding: 10px 0;
+}
+footer #footer_navi li {
+  display: inline;
+  border-left: solid 1px #333;
+  margin-left: 8px;
+  padding-left: 8px;
+  font-size: smaller;
+}
+footer #footer_navi li:last-child {
+  border-right: solid 1px #333;
+  padding: 0 8px;
+}
+footer small {
+  display: inline-block;
+  padding: 8px 0;
+  color: #fff;
+}
