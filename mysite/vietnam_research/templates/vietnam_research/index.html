@@ -17,6 +17,7 @@
     <title>VNMビューア</title>
 
     <!-- css -->
+    <link rel="stylesheet" href="{% static 'vietnam_research/css/reset.css' %}"> 
     <link rel="stylesheet" href="{% static 'vietnam_research/css/index.css' %}"> 
 
     <!-- chart.js -->
@@ -79,17 +80,17 @@
                 <!-- basicinfo -->
                 <div id="basicinfo" class="basicinfo">
                     <h2>ベトナム基本情報</h2>
-                    {% for idx, row in basicinfo.iterrows %}
                     <table><tbody>
+                    {% for idx, row in basicinfo.iterrows %}
                         <tr>
                             <th><p>{{ row.item }}</p></th>
                             <td><p>{{ row.description }}</p></td>
                         </tr>
-                    </tbody></table>
                     {% endfor %}
+                    </tbody></table>
                 </div>
             </div>
-            <p><a href="https://www.jetro.go.jp/world/asia/vn/stat_01.html">基礎的経済指標（日本貿易振興機構 jetro.go.jp）</a>※IMFデータをもとにSBI証券が作成を参考に</p>
+            <p class="note"><a href="https://www.jetro.go.jp/world/asia/vn/stat_01.html">基礎的経済指標（日本貿易振興機構 jetro.go.jp）</a>※IMFデータをもとにSBI証券が作成を参考に</p>
 
             <!-- todo -->
             <h2>Todo</h2>
@@ -114,10 +115,10 @@
                 他方、足元で製造業の伸び率が加速している点については、ベトナムに進出した外資系企業による鉄鋼や電機製品などの生産が
                 拡大したことに影響されたと見られる。中国やタイに比べて低いとされてきたベトナムの賃金は、近年、上昇が続いており、
                 ベトナムに進出した日系企業にとって悩みの種となっている。<BR>
-                <a href="https://www.murc.jp/wp-content/uploads/2018/03/report_180316.pdf">MURCベトナム経済の現状と今後の展望(20180316)</a>
             </p>
             <div class="radarChart1" style="display: inline-flex;"></div>
             <div class="radarChart2" style="display: inline-flex;"></div>
+            <p><a class="note" href="https://www.murc.jp/wp-content/uploads/2018/03/report_180316.pdf">MURCベトナム経済の現状と今後の展望(20180316)</a></p>
 
             <!-- trading price by industry -->
             <h2>業種別売買代金（10億ドン[÷1,000,000,000]）</h2>
