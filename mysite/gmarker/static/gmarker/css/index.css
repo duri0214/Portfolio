@@ -49,7 +49,7 @@ header li {
     display: inline-block;
     list-style: none;
 }
-header a, span {
+header a, header span {
     /* Tips: 実質paddingで高さを作ってる */
     display: block;
     padding: 6px;
