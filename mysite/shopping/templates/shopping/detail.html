@@ -19,12 +19,12 @@
     <p>{{ object.description | linebreaksbr }}<p>
 
     <!-- 購入ボタン・フォームの作成 -->
-    {% if user.is_authenticated %}
+    <!-- {% if user.is_authenticated %} -->
         <form method="POST">
             {% csrf_token %}
             <script
                 src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                    data-key="{{ publick_key }}"
+                    data-key="{{ public_key }}"
                 data-amount="{{ object.price }}"
                 data-name="よろずや"
                 data-description="{{ object.name }}"
@@ -34,6 +34,6 @@
                 data-email="{{ user.email }}">
             </script>
         </form>
-    {% endif %}
+    <!-- {% endif %} -->
 
 {% endblock %}
