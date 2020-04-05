@@ -29,18 +29,23 @@
             {% endfor %}
         </ul>
     </div>
-    <!-- 前へ の部分 -->
-    {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">前へ</a>
-    {% endif %}
 
-    <!-- 1/3 の部分 -->
-   {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
-
-    <!-- 次へ の部分 -->
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">次へ</a>
-    {% endif %}
+    <!-- previous paginate -->
+    <div class="paginate">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">前へ</a>
+        {% else %}
+            <span>前へ</span>
+        {% endif %}
+        <!-- page -->
+        {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
+        <!-- next paginate -->
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+        {% else %}
+            <span>次へ</span>
+        {% endif %}
+    </div>
 
     <h2>管理用</h2>
     <form method="POST" class="registration post-form" enctype="multipart/form-data">

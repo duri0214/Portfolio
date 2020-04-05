@@ -23,8 +23,17 @@ h3 {
     padding: 10px 14px;
     font-size: 16px;
     margin: 20px auto 10px;
-  }
-  .note {
+}
+.note {
+    font-size: small;
+}
+.paginate {
+    display: block;
+    color: lightgray;
+    font-size: small;
+}
+a.paginate, span.paginate {
+    color: lightgray;
     font-size: small;
 }
 
@@ -49,7 +58,7 @@ header li {
     display: inline-block;
     list-style: none;
 }
-header a, span {
+header a, header span {
     /* Tips: 実質paddingで高さを作ってる */
     display: block;
     padding: 9px;
@@ -107,7 +116,7 @@ footer p {
     font-size: small;
     margin-block-start: 0.6em;
 }
-footer a:link, a:visited { color: white; }
+footer a:link, footer a:visited { color: white; }
   
 
 /* card design */
