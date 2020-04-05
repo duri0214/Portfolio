@@ -19,7 +19,7 @@ class IndexView(generic.ListView):
     """IndexView"""
     template_name = 'shopping/index.html'
     model = Products
-    paginate_by = 2
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         """form"""
