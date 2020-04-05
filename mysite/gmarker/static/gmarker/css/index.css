@@ -107,7 +107,7 @@ footer p {
     font-size: small;
     margin-block-start: 0.4em;
 }
-footer a:link, a:visited { color: white; }
+footer a:link, footer a:visited { color: white; }
 
 /* card design */
 .cards ul {

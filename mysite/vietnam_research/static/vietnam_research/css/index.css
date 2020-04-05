@@ -130,7 +130,7 @@ footer p {
   font-size: small;
   margin-block-start: 0.6em;
 }
-footer a:link, a:visited { color: white; }
+footer a:link, footer a:visited { color: white; }
 #container {
   position: relative;
   min-height: 100%;
