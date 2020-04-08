@@ -101,20 +101,18 @@ header .logout a::before {
   padding: 10px;
 }
 #main {
-  width: 1500px;
   margin: 36px auto 30px;
   z-index: 1
 }
-#basicinfo {
-  width: 950px;
-  margin-left: 50px;
-}
-#like {
-  width: 500px;
-}
-.wrapper {
+.container {
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+}
+.flex-item {
+  margin-right: 50px;
+  margin: 0 auto;
+  width: 800px;
 }
 footer {
   background-color: #ff5900;
@@ -131,10 +129,6 @@ footer p {
   margin-block-start: 0.6em;
 }
 footer a:link, footer a:visited { color: white; }
-#container {
-  position: relative;
-  min-height: 100%;
-}
 
 /* article */
 .article a::before {
@@ -216,6 +210,7 @@ footer a:link, footer a:visited { color: white; }
 /* todo */
 ul.todo {
   border: solid 2px #ffb03f;
+  margin: 0 auto;
   padding: 0 0.5em;
   position: relative;
   width: 600px;

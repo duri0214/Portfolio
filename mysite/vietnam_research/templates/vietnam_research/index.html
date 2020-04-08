@@ -59,8 +59,8 @@
         </header>
 
         <div id="main">
-            <div class="wrapper">
-                <div id="like">
+            <div class="container">
+                <div class="flex-item">
                     <h2>いいね！機能</h2>
                     {% for idx, row in articles.iterrows %}
                         <div class="article">
@@ -78,7 +78,7 @@
                 </div>
 
                 <!-- basicinfo -->
-                <div id="basicinfo" class="basicinfo">
+                <div class="basicinfo flex-item">
                     <h2>ベトナム基本情報</h2>
                     <table><tbody>
                     {% for idx, row in basicinfo.iterrows %}
@@ -94,7 +94,7 @@
 
             <!-- todo -->
             <h2>Todo</h2>
-            <ul class="todo">
+            <ul class="todo margin-c">
                 <li><a href="http://www.fao.org/home/en/">FAOから種類別肉さかな消費量のグラフ</a></li>
                 <li>東南アジア各地のグラフで切り替えられるように</li>
                 <li>国の成長期に金融が稼げる理由は？</li>
@@ -116,23 +116,25 @@
                 拡大したことに影響されたと見られる。中国やタイに比べて低いとされてきたベトナムの賃金は、近年、上昇が続いており、
                 ベトナムに進出した日系企業にとって悩みの種となっている。<BR>
             </p>
-            <div class="radarChart1" style="display: inline-flex;"></div>
-            <div class="radarChart2" style="display: inline-flex;"></div>
+            <div class="container">
+                <div class="flex-item radarChart1"></div>
+                <div class="flex-item radarChart2"></div>
+            </div>
             <p><a class="note" href="https://www.murc.jp/wp-content/uploads/2018/03/report_180316.pdf">MURCベトナム経済の現状と今後の展望(20180316)</a></p>
 
             <!-- trading price by industry -->
             <h2>業種別売買代金（10億ドン[÷1,000,000,000]）</h2>
-            <canvas id="barChart1" width="1000px" height="400px"></canvas>
+            <canvas id="barChart1" class="flex-item" style="height:400px"></canvas>
 
             <!-- vn-index -->
             <h2>VN-Index（時系列）</h2>
             <p>底堅く上昇トレンド</p>
-            <canvas id="vnChart" style="height:300px; width:1000px"></canvas>
+            <canvas id="vnChart" class="flex-item" style="height:300px"></canvas>
 
             <!-- vn-index layer -->
             <h2>VN-Index（年単位ミルフィーユ）</h2>
             <p>季節要因は特に感じられない</p>
-            <canvas id="vnChart_layer" style="height:300px; width:1000px"></canvas>
+            <canvas id="vnChart_layer" class="flex-item" style="height:300px"></canvas>
 
             <!-- exchange -->
             <h2>ドンから日本円へ</h2>
