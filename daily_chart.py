@@ -126,19 +126,20 @@ for key, values in AGG.groupby('symbol'):
     slope_inner = []
     price_inner = []
     score = 0
-    for i in range(len(days)):
-        values_inner = values[-days[i]:]
-        x_scale = range(len(values_inner))
-        A = np.array([x_scale, np.ones(len(x_scale))]).T
-        slope, intercept = np.linalg.lstsq(A, values_inner['closing_price'], rcond=-1)[0]
-        slope_inner.append(slope)
-        # scoring
-        if slope > 0:
-            score += 1
-        # plot: overwrite fitted line
-        x_offset = len(values) - days[i]
-        x_scale_shifted = range(x_offset, days[i] + x_offset)
-        plt.plot(x_scale_shifted, (slope * x_scale + intercept), "g--")
+    for i, v in enumerate(days):
+        if len(values) > days[i]:
+            values_inner = values[-days[i]:]
+            x_scale = range(len(values_inner))
+            A = np.array([x_scale, np.ones(len(x_scale))]).T
+            slope, intercept = np.linalg.lstsq(A, values_inner['closing_price'], rcond=-1)[0]
+            slope_inner.append(slope)
+            # scoring
+            if slope > 0:
+                score += 1
+            # plot: overwrite fitted line
+            x_offset = len(values) - days[i]
+            x_scale_shifted = range(x_offset, days[i] + x_offset)
+            plt.plot(x_scale_shifted, (slope * x_scale + intercept), "g--")
     if score == len(days):
         # save png: w640, h480
         outpath = OUTFOLDER + '/{0}.png'.format(key)
