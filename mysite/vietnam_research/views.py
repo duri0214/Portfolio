@@ -30,7 +30,7 @@ def index(request):
             watchlist.bikou = buy_bikou
             watchlist.save()
             # redirect
-            return redirect('index')
+            return redirect('vnm:index')
     else:
         form = WatchelistForm()
         form.buy_date = datetime.today().strftime("%Y/%m/%d")
