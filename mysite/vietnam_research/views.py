@@ -126,38 +126,33 @@ def index(request):
     # watchlist
     watchelist = pd.read_sql_query(
         '''
-        SELECT
-              IQ.*
-            , FORMAT(i_tdy.closing_price, 0) AS closing_price
-            , ROUND(((i_tdy.closing_price / IQ.stocks_price_forcalc) -1) *100, 2)
-                AS stocks_price_delta
-        FROM
-        (
-            SELECT DISTINCT
-                CASE
-                    WHEN market_code = "HOSE" THEN "hcm"
-                    WHEN market_code = "HNX" THEN "hn"
-                END mkt
-                , w.symbol
-                , LEFT(CONCAT(i.industry1, ': ', i.company_name), 14) AS company_name
-                , CONCAT(YEAR(w.bought_day), '/', MONTH(w.bought_day), '/',
-                    DAY(w.bought_day)) AS bought_day
-                , FORMAT(w.stocks_price, 0) AS stocks_price
-                , w.stocks_price AS stocks_price_forcalc
-                , FORMAT(w.stocks_price / 100 / 2, 0) AS stocks_price_yen
-                , FORMAT((w.stocks_price / 100 / 2) * w.stocks_count, 0) AS buy_price_yen
-                , w.stocks_count
-                , i.industry1
-            FROM vietnam_research_watchlist w INNER JOIN vietnam_research_industry i
-                ON w.symbol = i.symbol
-            WHERE already_has = 1
-        ) IQ INNER JOIN (
-            SELECT DISTINCT
+		WITH latest AS (
+            SELECT
                 i.symbol, i.closing_price * 1000 closing_price
             FROM vietnam_research_industry i
             WHERE i.pub_date = (SELECT MAX(i.pub_date) pub_date FROM vietnam_research_industry i)
-        ) i_tdy ON IQ.symbol = i_tdy.symbol
-        ORDER BY IQ.bought_day;
+        )
+		SELECT DISTINCT
+			CASE
+				WHEN market_code = "HOSE" THEN "hcm"
+				WHEN market_code = "HNX" THEN "hn"
+			END mkt
+			, w.symbol
+			, LEFT(CONCAT(i.industry1, ': ', i.company_name), 14) AS company_name
+			, CONCAT(YEAR(w.bought_day), '/', MONTH(w.bought_day), '/',
+				DAY(w.bought_day)) AS bought_day
+			, FORMAT(w.stocks_price, 0) AS stocks_price
+			, FORMAT(w.stocks_price / 100 / 2, 0) AS stocks_price_yen
+			, FORMAT((w.stocks_price / 100 / 2) * w.stocks_count, 0) AS buy_price_yen
+			, w.stocks_count
+			, i.industry1
+			, FORMAT(latest.closing_price, 0) AS closing_price
+			, ROUND(((latest.closing_price / w.stocks_price) -1) *100, 2) AS stocks_price_delta
+		FROM vietnam_research_watchlist w
+			INNER JOIN vietnam_research_industry i ON w.symbol = i.symbol
+			INNER JOIN latest ON w.symbol = latest.symbol
+		WHERE already_has = 1
+        ORDER BY w.bought_day;
         '''
         , con)
 
