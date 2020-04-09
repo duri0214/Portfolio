@@ -152,7 +152,7 @@ def index(request):
 			INNER JOIN vietnam_research_industry i ON w.symbol = i.symbol
 			INNER JOIN latest ON w.symbol = latest.symbol
 		WHERE already_has = 1
-        ORDER BY w.bought_day;
+        ORDER BY bought_day;
         '''
         , con)
 
