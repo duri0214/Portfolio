@@ -46,55 +46,55 @@
     <script>let myurl = {"base": "{% url 'vnm:index' %}"};</script>
 </head>
 <body>
-    <div id="container">
-        <!-- nav -->
-        <h1></h1>
-        <header>
-            <ul class="right_align">
-                <li class="usrname"><span><u>guest</u></span></li>
-                <li class="pptx"><a href="#pptx">pptx資料</a></li>
-                <li class="xlsx"><a href="{% static 'vietnam_research/xlsx/sample.xlsx' %}" onclick='countup();'>xlsx資料</a></li>
-                <li class="logout"><a href="#logout">ログアウト</a></li>
-            </ul>
-        </header>
+    <!-- nav -->
+    <h1></h1>
+    <header>
+        <ul class="right_align">
+            <li class="usrname"><span><u>guest</u></span></li>
+            <li class="pptx"><a href="#pptx">pptx資料</a></li>
+            <li class="xlsx"><a href="{% static 'vietnam_research/xlsx/sample.xlsx' %}" onclick='countup();'>xlsx資料</a></li>
+            <li class="logout"><a href="#logout">ログアウト</a></li>
+        </ul>
+    </header>
 
-        <div id="main">
-            <div class="container">
-                <div class="flex-item">
-                    <h2>いいね！機能</h2>
-                    {% for idx, row in articles.iterrows %}
-                        <div class="article">
-                            <span class="title">{{ row.title }}</span>
-                            <p>{{ row.note }}</p>
-                            <ul>
-                                <li>
-                                    <a role="button" aria-pressed='{{ row.is_like | yesno:"true,false" }}' onclick="likes(event, '1', '{{ row.id }}')">
-                                        いいね！<span>({{ row.likes_cnt }})</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <!-- basicinfo -->
-                <div class="basicinfo flex-item">
-                    <h2>ベトナム基本情報</h2>
-                    <table><tbody>
-                    {% for idx, row in basicinfo.iterrows %}
-                        <tr>
-                            <th><p>{{ row.item }}</p></th>
-                            <td><p>{{ row.description }}</p></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody></table>
-                </div>
+    <div id="main">
+        <div class="flex-container">
+            <div class="flex-item ratio45">
+                <h2>いいね！機能</h2>
+                {% for idx, row in articles.iterrows %}
+                    <div class="article">
+                        <span class="title">{{ row.title }}</span>
+                        <p>{{ row.note }}</p>
+                        <ul>
+                            <li>
+                                <a role="button" aria-pressed='{{ row.is_like | yesno:"true,false" }}' onclick="likes(event, '1', '{{ row.id }}')">
+                                    いいね！<span>({{ row.likes_cnt }})</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
             </div>
-            <p class="note"><a href="https://www.jetro.go.jp/world/asia/vn/stat_01.html">基礎的経済指標（日本貿易振興機構 jetro.go.jp）</a>※IMFデータをもとにSBI証券が作成を参考に</p>
 
-            <!-- todo -->
+            <!-- basicinfo -->
+            <div class="flex-item ratio45 basicinfo">
+                <h2>ベトナム基本情報</h2>
+                <table><tbody>
+                {% for idx, row in basicinfo.iterrows %}
+                    <tr>
+                        <th><p>{{ row.item }}</p></th>
+                        <td><p>{{ row.description }}</p></td>
+                    </tr>
+                {% endfor %}
+                </tbody></table>
+                <p class="note"><a href="https://www.jetro.go.jp/world/asia/vn/stat_01.html">基礎的経済指標（日本貿易振興機構 jetro.go.jp）</a>※IMFデータをもとにSBI証券が作成を参考に</p>
+            </div>
+        </div>
+
+        <!-- todo -->
+        <div class="content-container90 margin-c">
             <h2>Todo</h2>
-            <ul class="todo margin-c">
+            <ul class="todo">
                 <li><a href="http://www.fao.org/home/en/">FAOから種類別肉さかな消費量のグラフ</a></li>
                 <li>東南アジア各地のグラフで切り替えられるように</li>
                 <li>国の成長期に金融が稼げる理由は？</li>
@@ -107,8 +107,10 @@
                 <li>この予算（＋手数料）であと何株買えるの？の計算式をフォームで</li>
                 <li>スクレイピング: 上場日</li>
             </ul>
+        </div>
 
-            <!-- macro by industry -->
+        <!-- macro by industry -->
+        <div class="content-container90 margin-c">
             <h2>業種別マクロ分析</h2>
             <p>これで3年分ぐらいを重ねてみたい</p>
             <p>足元の鉱業の不調は、かつてベトナムの主力輸出品であった原油の生産量が原油価格低迷に伴い減少したことが主因と見られる。
@@ -116,32 +118,42 @@
                 拡大したことに影響されたと見られる。中国やタイに比べて低いとされてきたベトナムの賃金は、近年、上昇が続いており、
                 ベトナムに進出した日系企業にとって悩みの種となっている。<BR>
             </p>
-            <div class="container">
-                <div class="flex-item radarChart1"></div>
-                <div class="flex-item radarChart2"></div>
+            <div class="flex-container">
+                <div class="flex-item ratio45 c radarChart1"></div>
+                <div class="flex-item ratio45 c radarChart2"></div>
             </div>
             <p><a class="note" href="https://www.murc.jp/wp-content/uploads/2018/03/report_180316.pdf">MURCベトナム経済の現状と今後の展望(20180316)</a></p>
+        </div>
 
-            <!-- trading price by industry -->
+        <!-- trading price by industry -->
+        <div class="content-container90 margin-c">
             <h2>業種別売買代金（10億ドン[÷1,000,000,000]）</h2>
-            <canvas id="barChart1" class="flex-item" style="height:400px"></canvas>
+            <canvas id="barChart1" class="ratio90 margin-c" style="height:400px"></canvas>
+        </div>
 
-            <!-- vn-index -->
+        <!-- vn-index -->
+        <div class="content-container90 margin-c">
             <h2>VN-Index（時系列）</h2>
             <p>底堅く上昇トレンド</p>
-            <canvas id="vnChart" class="flex-item" style="height:300px"></canvas>
+            <canvas id="vnChart" class="ratio90 margin-c" style="height:300px"></canvas>
+        </div>
 
-            <!-- vn-index layer -->
+        <!-- vn-index layer -->
+        <div class="content-container90 margin-c">
             <h2>VN-Index（年単位ミルフィーユ）</h2>
             <p>季節要因は特に感じられない</p>
-            <canvas id="vnChart_layer" class="flex-item" style="height:300px"></canvas>
+            <canvas id="vnChart_layer" class="ratio90 margin-c" style="height:300px"></canvas>
+        </div>
 
-            <!-- exchange -->
+        <!-- exchange -->
+        <div class="content-container90 margin-c">
             <h2>ドンから日本円へ</h2>
             ドンを200で割ると、ざっくり日本円になります。
             1,000don -> 5円
+        </div>
 
-            <!-- top5 -->
+        <!-- top5 -->
+        <div class="content-container90 margin-c">
             <h2>業種別企業別「売買代金」全期間平均TOP5（SBI証券取り扱い銘柄のみ）</h2>
             {% for idx, row in top5list.iterrows %}
                 {%if forloop.counter0|divisibleby:"5" %}
@@ -151,45 +163,49 @@
                     <img src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
                 </a>
             {% endfor %}
-            
-            <!-- uptrends -->
+        </div>
+        
+        <!-- uptrends -->
+        <div class="content-container90 margin-c">
             <h2>株価直近（14日線/7日線/3日線）上昇銘柄（SBI証券取り扱い銘柄のみ）</h2>
             <div id="uptrends_wrapper"></div>
-            <script>
-                json = JSON.parse('{{ uptrends|safe }}');
-                var uptrends = document.getElementById('uptrends_wrapper');
-                for (var industry in json) {
-                    h3 = document.createElement('h3');
-                    h3.textContent = json[industry]['ind_name'];
-                    ul = document.createElement("ul");
-                    for (var i in json[industry]['datasets']) {
-                        mkt = json[industry]['datasets'][i]['mkt'];
-                        symbol = json[industry]['datasets'][i]['symbol'];
-                        price_latest = json[industry]['datasets'][i]['stocks_price_latest'];
-                        price_delta = json[industry]['datasets'][i]['stocks_price_delta'];
-                        price_delta_sign = Math.sign(price_delta) <0 ? "▲":"＋";
-                        price_delta = Math.abs(price_delta);
-                        img = document.createElement('img');
-                        img.src = "{% static 'vietnam_research/chart_uptrend/' %}" + symbol + ".png";
-                        img.alt = symbol;
-                        a = document.createElement('a');
-                        a.href = "https://www.viet-kabu.com/" + mkt + "/" + symbol + ".html";
-                        a.target = "_blank";
-                        p = document.createElement('p');
-                        p.textContent = symbol + ": " + price_latest + "（" + price_delta_sign + price_delta + "）";
-                        li = document.createElement("li");
-                        li.className = 'uptrends';
-                        a.appendChild(img);
-                        li.appendChild(a);
-                        li.appendChild(p);
-                        ul.appendChild(li);
-                    }
-                    uptrends.appendChild(h3);
-                    uptrends.appendChild(ul);
+        </div>
+        <script>
+            json = JSON.parse('{{ uptrends|safe }}');
+            var uptrends = document.getElementById('uptrends_wrapper');
+            for (var industry in json) {
+                h3 = document.createElement('h3');
+                h3.textContent = json[industry]['ind_name'];
+                ul = document.createElement("ul");
+                for (var i in json[industry]['datasets']) {
+                    mkt = json[industry]['datasets'][i]['mkt'];
+                    symbol = json[industry]['datasets'][i]['symbol'];
+                    price_latest = json[industry]['datasets'][i]['stocks_price_latest'];
+                    price_delta = json[industry]['datasets'][i]['stocks_price_delta'];
+                    price_delta_sign = Math.sign(price_delta) <0 ? "▲":"＋";
+                    price_delta = Math.abs(price_delta);
+                    img = document.createElement('img');
+                    img.src = "{% static 'vietnam_research/chart_uptrend/' %}" + symbol + ".png";
+                    img.alt = symbol;
+                    a = document.createElement('a');
+                    a.href = "https://www.viet-kabu.com/" + mkt + "/" + symbol + ".html";
+                    a.target = "_blank";
+                    p = document.createElement('p');
+                    p.textContent = symbol + ": " + price_latest + "（" + price_delta_sign + price_delta + "）";
+                    li = document.createElement("li");
+                    li.className = 'uptrends';
+                    a.appendChild(img);
+                    li.appendChild(a);
+                    li.appendChild(p);
+                    ul.appendChild(li);
                 }
-            </script>
-            
-            <!-- watchlist -->
+                uptrends.appendChild(h3);
+                uptrends.appendChild(ul);
+            }
+        </script>
+        
+        <!-- watchlist -->
+        <div class="content-container90 margin-c">
             <h2>ウォッチリスト</h2>
             <div class="cards">
                 <ul>
@@ -223,16 +239,17 @@
                     <ul>{{ form.as_ul }} <li><input type="submit" value="登録"></li></ul>
                 </div>
             </form>
+        </div>
 
-            <!-- what is PER? -->
+        <!-- what is PER? -->
+        <div class="content-container90 margin-c">
             <h2>PERとは</h2>
             <img src="{% static 'vietnam_research/images/PER.png' %}" alt="PER">
-
         </div>
-        <footer>
-            <p>© 2019 henojiya. / <a href="https://github.com/duri0214" target="_blank">github portfolio</a></p>
-        </footer>
     </div>
+    <footer>
+        <p>© 2019 henojiya. / <a href="https://github.com/duri0214" target="_blank">github portfolio</a></p>
+    </footer>
 
     <script>
         var radarChartOptions = {
