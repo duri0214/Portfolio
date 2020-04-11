@@ -9,7 +9,6 @@ from .forms import ProductForm
 # read APIKEY
 with open(settings.BASE_DIR + '/shopping/api_setting/apikey.txt', mode='r') as file:
     stripe.api_key = file.read()
-    print('stripe.api_key:', stripe.api_key)
 
 def index(request):
     """いわばhtmlのページ単位の構成物です"""
