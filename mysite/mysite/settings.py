@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'vietnam_research.apps.VietnamResearchConfig',
     'gmarker.apps.GmarkerConfig',
     'shopping.apps.ShoppingConfig',
-    'linebot.apps.LinebotConfig',
+    # 'linebot.apps.LinebotConfig',
 ]
 
 MIDDLEWARE = [
