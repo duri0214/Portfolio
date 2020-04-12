@@ -19,7 +19,7 @@ h2::before {
     padding: 10px;
 }
 h3 {
-    border-left: solid 3px #ff5900;
+    border-left: solid 3px #415db9;
     padding: 10px 14px;
     font-size: 16px;
     margin: 20px auto 10px;
@@ -37,6 +37,7 @@ a.paginate, span.paginate {
     color: lightgray;
     font-size: small;
 }
+input[type=number] {text-align: right;}
 
 header {
     background-color: #415db9;
@@ -146,6 +147,7 @@ footer a:link, footer a:visited { color: white; }
 .card-title {
     font-size: 14px;
     margin-bottom: 20px;
+    height: 28px;
     color: #333;
 }
 .card-text {
@@ -206,6 +208,7 @@ ul.specific_form {
 }
 
 .registration input[type="submit"] {
+    margin-left: 100px;
     width: 180px;
     border: 2px solid #9ec34b;
     font-size: 16px;
@@ -213,9 +216,15 @@ ul.specific_form {
     padding: 8px 16px;
     border-radius: 4px;
     transition: .4s;
-  }
-  .registration input[type="submit"]:hover {
+}
+.registration input[type="submit"]:hover {
     background-color: #9ec34b;
     border-color: #cbe585;
     color: #FFF;
-  }
+}
+.registration label {
+    display: block;
+    float: left;
+    width: 100px;
+}
+  

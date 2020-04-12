@@ -7,9 +7,9 @@ class Products(models.Model):
     """商品"""
     code = models.CharField('商品コード', max_length=200)
     name = models.CharField('商品名', max_length=200)
-    price = models.IntegerField(default=0)
+    price = models.IntegerField('金額', default=0)
     description = models.TextField('説明')
-    picture = models.ImageField(upload_to='img/', blank=True, null=True)
+    picture = models.ImageField('商品写真', upload_to='shopping/static/shopping/img/')
     created_at = models.DateTimeField(default=timezone.now)
 
 class BuyingHistory(models.Model):
