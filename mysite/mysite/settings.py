@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'vietnam_research.apps.VietnamResearchConfig',
     'gmarker.apps.GmarkerConfig',
     'shopping.apps.ShoppingConfig',
+    'django.contrib.humanize',
     # 'linebot.apps.LinebotConfig',
 ]
 
@@ -125,3 +126,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STRIPE_PUBLIC_KEY = 'pk_test_eiOWUzSaLn51lXt0POuRBskA009JsTTAb5'
+
+# 'django.contrib.humanize' 3桁カンマ
+NUMBER_GROUPING = 3

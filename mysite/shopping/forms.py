@@ -3,7 +3,7 @@ from django import forms
 from .models import Products
 
 class ProductForm(forms.ModelForm):
-    """ProductForm"""
+    """ ProductForm """
     class Meta:
         """Meta"""
         model = Products

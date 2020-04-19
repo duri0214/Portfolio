@@ -1,5 +1,6 @@
 {% extends 'shopping/base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'shopping/css/index.css' %}">
@@ -10,14 +11,14 @@
     <h2>商品一覧</h2>
     <div class="cards">
         <ul>
-            {% for product in object_list %}
+            {% for product in products %}
             <li>
                 <section class="card">
                     <img class="card-img" src="{% static 'shopping/img/' %}{{ product.code }}.jpg" alt="{{ product.code }}">
                     <div class="card-content">
                         <h3 class="card-title">{{ product.name }}</h3>
                         <p class="card-text">
-                            price: @{{ product.price }} 円<br>
+                            price: @{{ product.price | intcomma }} 円<br>
                             {{ product.description | truncatechars:20 }}<br>
                         </p>
                     </div>
@@ -62,5 +63,30 @@
             <button type="submit">UPLOAD</button>
         </div>
     </form>
+    <h3>編集</h3>
+    <div class="edit_data">
+        <table id="edit_table">
+            <thead>
+                <tr>
+                    <th>code</th>
+                    <th>name</th>
+                    <th>price</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in editablelist %}
+                <tr>
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price | intcomma }}</td>
+                    <td>{{ item.description | truncatechars:20 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>addRowsHandler();</script>
 
 {% endblock %}

@@ -61,17 +61,25 @@ class UploadBulkView(FormView):
                 product.save()
         return super().form_valid(form)
 
-class IndexView(generic.ListView):
+class IndexView(generic.TemplateView):
     """IndexView"""
     template_name = 'shopping/index.html'
-    model = Products
-    paginate_by = 5
+    # model = Products
+    # paginate_by = 5 # TODO paging
+
+    def post(self, request, *args, **kwargs):
+        """post"""
+        # if formset.is_valid():
+        #     formset.save()
+        # return redirect('shp:index')
 
     def get_context_data(self, **kwargs):
         # prepare blank form
         context = super().get_context_data(**kwargs)
+        context['products'] = Products.objects.all()
         context['form_single'] = ProductForm()
         context['form_csv'] = UploadCSVForm()
+        context['editablelist'] = Products.objects.order_by('id')[:5]
         return context
 
 class DetailView(generic.DetailView):
