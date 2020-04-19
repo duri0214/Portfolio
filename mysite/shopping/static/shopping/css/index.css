@@ -278,7 +278,6 @@ ul.specific_form {
     border-radius: 0 0 5px 0;
 }
 
-.edit_data .row_detail {
-    height: 200px;
-    background-color: royalblue;
+.edit_data .edit_record td {
+    height: 100px;
 }

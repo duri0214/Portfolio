@@ -2,9 +2,11 @@
 import os
 import io
 import csv
+import json
 from pathlib import Path
 from django.conf import settings
 from django.shortcuts import redirect, render
+from django.http.response import JsonResponse
 from django.views import generic
 from django.views.generic import FormView
 from django.urls import reverse_lazy
@@ -69,9 +71,16 @@ class IndexView(generic.TemplateView):
 
     def post(self, request, *args, **kwargs):
         """post"""
-        # if formset.is_valid():
-        #     formset.save()
-        # return redirect('shp:index')
+        code = json.loads(request.body).get('code')
+        query = Products.objects.get(code=code)
+        print('query: ', code, query.code)
+        # responce json
+        return JsonResponse({
+            "code": query.code,
+            "name": query.name,
+            "price": query.price,
+            "description": query.description
+        })
 
     def get_context_data(self, **kwargs):
         # prepare blank form
