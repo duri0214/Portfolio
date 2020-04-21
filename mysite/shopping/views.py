@@ -71,15 +71,27 @@ class IndexView(generic.TemplateView):
 
     def post(self, request, *args, **kwargs):
         """post"""
-        code = json.loads(request.body).get('code')
-        query = Products.objects.get(code=code)
-        print('query: ', code, query.code)
+        mode = self.kwargs.get("mode")
+        if mode == 0:
+            # json read
+            data = json.loads(request.body)
+        elif mode == 1:
+            # json read
+            data = json.loads(request.body)
+            # update
+            product = Products.objects.get(code=data.get('code'))
+            product.name = data.get('name')
+            product.price = data.get('price')
+            product.description = data.get('description')
+            product.save()
+        # read from dbtable
+        data = Products.objects.get(code=data.get('code'))
         # responce json
         return JsonResponse({
-            "code": query.code,
-            "name": query.name,
-            "price": query.price,
-            "description": query.description
+            "code": data.code,
+            "name": data.name,
+            "price": data.price,
+            "description": data.description
         })
 
     def get_context_data(self, **kwargs):

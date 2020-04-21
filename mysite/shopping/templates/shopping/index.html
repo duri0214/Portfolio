@@ -50,18 +50,16 @@
 
     <h2>管理用</h2>
     <h3>単品登録</h3>
-    <form action="{% url 'shp:regist_single' %}" method="POST" class="registration post-form" enctype="multipart/form-data">
+    <form action="{% url 'shp:regist_single' %}" method="POST" class="registration" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form_single.as_p }}
         <input type="submit" value="登録">
     </form>
     <h3>CSV登録</h3>
-    <form action="{% url 'shp:regist_bulk' %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'shp:regist_bulk' %}" method="POST" class="registration" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form_csv.as_p }}
-        <div class="form-group">
-            <button type="submit">UPLOAD</button>
-        </div>
+        <input type="submit" value="UPLOAD">
     </form>
     <h3>編集</h3>
     <div class="edit_data">

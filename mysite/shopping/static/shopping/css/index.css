@@ -281,3 +281,28 @@ ul.specific_form {
 .edit_data .edit_record td {
     height: 100px;
 }
+.edit_data .edit_record input[type="text"] {
+    border-radius: 4px;
+    height: 22px;
+}
+.edit_data .edit_record input[type="submit"] {
+    margin-left: 10px;
+    border-radius: 4px;
+    height: 30px;
+}
+.edit_data .edit_record input[type="text"]:nth-child(n+2){
+    margin-left: 10px;
+}
+#edit1 {
+    width: 10%;
+}
+#edit2 {
+    width: 15%;
+}
+#edit3 {
+    width: 10%;
+    text-align: right;
+}
+#edit4 {
+    width: 40%;
+}
