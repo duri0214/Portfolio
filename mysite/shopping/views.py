@@ -12,7 +12,7 @@ from django.views.generic import FormView
 from django.urls import reverse_lazy
 import stripe
 from .models import Products, BuyingHistory
-from .forms import ProductForm, UploadCSVForm
+from .forms import ProductForm, UploadCSVForm, EditForm
 
 # read APIKEY
 with open(settings.BASE_DIR + '/shopping/api_setting/apikey.txt', mode='r') as file:
@@ -71,20 +71,21 @@ class IndexView(generic.TemplateView):
 
     def post(self, request, *args, **kwargs):
         """post"""
+        # mode read
         mode = self.kwargs.get("mode")
-        if mode == 0:
-            # json read
-            data = json.loads(request.body)
-        elif mode == 1:
-            # json read
-            data = json.loads(request.body)
+        if mode != 0:
             # update
-            product = Products.objects.get(code=data.get('code'))
-            product.name = data.get('name')
-            product.price = data.get('price')
-            product.description = data.get('description')
-            product.save()
-        # read from dbtable
+            form = EditForm(request.POST)
+            if form.is_valid():
+                product = Products.objects.get(code=form.cleaned_data['code'])
+                product.code = form.cleaned_data['code']
+                product.name = form.cleaned_data['name']
+                product.price = form.cleaned_data['price']
+                product.description = form.cleaned_data['description']
+                product.save()
+            return redirect('shp:index')
+        # read
+        data = json.loads(request.body)
         data = Products.objects.get(code=data.get('code'))
         # responce json
         return JsonResponse({
@@ -101,6 +102,7 @@ class IndexView(generic.TemplateView):
         context['form_single'] = ProductForm()
         context['form_csv'] = UploadCSVForm()
         context['editablelist'] = Products.objects.order_by('id')[:5]
+        context['editableform'] = EditForm()
         return context
 
 class DetailView(generic.DetailView):

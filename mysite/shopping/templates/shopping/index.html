@@ -80,6 +80,18 @@
                     <td>{{ item.price | intcomma }}</td>
                     <td>{{ item.description | truncatechars:20 }}</td>
                 </tr>
+                <tr class="edit_record">
+                    <form action="{% url 'shp:edit_data' 1 %}" method="POST">
+                        {% csrf_token %}
+                        <td colspan="4">
+                            {{ editableform.code }}
+                            {{ editableform.name }}
+                            {{ editableform.price }}
+                            {{ editableform.description }}
+                            <input type="submit">
+                        </td>
+                    </form>
+                </tr>
             {% endfor %}
             </tbody>
         </table>
