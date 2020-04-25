@@ -290,7 +290,7 @@ ul.specific_form {
 .edit_data .edit_record td {
     height: 100px;
 }
-.edit_data .edit_record input[type="text"],input[type="number"] {
+.edit_data .edit_record input[type="text"], .edit_data .edit_record input[type="number"] {
     border-radius: 4px;
     height: 22px;
 }
@@ -299,7 +299,7 @@ ul.specific_form {
     border-radius: 4px;
     height: 30px;
 }
-.edit_data .edit_record input[type="text"],input[type="number"],textarea:nth-child(n+2) {
+.edit_data .edit_record input:nth-child(n+2), .edit_data .edit_record textarea:nth-child(n+2) {
     margin-left: 10px;
     vertical-align: middle;
 }
