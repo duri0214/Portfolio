@@ -50,14 +50,13 @@ header li {
     list-style: none;
 }
 header a, header span {
-    /* Tips: 実質paddingで高さを作ってる */
     display: block;
-    padding: 6px;
+    padding: 8px;
     color: #fff;
     text-decoration: none;
     transition: background-color .2s linear;
 }
-header a {
+header a,span {
     text-decoration: none;
     font-size: small;
 }
