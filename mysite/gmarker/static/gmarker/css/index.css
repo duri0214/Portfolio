@@ -59,6 +59,7 @@ header a, header span {
 }
 header a {
     text-decoration: none;
+    font-size: small;
 }
 header a:hover {
     background-color: #fd8e52;
@@ -88,6 +89,12 @@ header .logout a::before {
     font-weight: 900;
     padding: 10px;
 }
+header .exlink a::after {
+    font-family: "Font Awesome 5 Free";
+    content: '\f35d';
+    font-weight: 900;
+    padding: 10px;
+}  
 #main {
     width: 1500px;
     margin: 36px auto 30px;
