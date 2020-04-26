@@ -12,7 +12,7 @@ from django.views.generic import FormView
 from django.urls import reverse_lazy
 import stripe
 from .models import Products, BuyingHistory
-from .forms import ProductForm, UploadCSVForm, EditForm
+from .forms import SingleRegistrationForm, UploadCSVForm, EditForm
 
 # read APIKEY
 with open(settings.BASE_DIR + '/shopping/api_setting/apikey.txt', mode='r') as file:
@@ -20,7 +20,7 @@ with open(settings.BASE_DIR + '/shopping/api_setting/apikey.txt', mode='r') as f
 
 class UploadSingleView(FormView):
     """UploadSingleView"""
-    form_class = ProductForm
+    form_class = SingleRegistrationForm
     success_url = reverse_lazy('shp:index')
 
     def form_valid(self, form):
@@ -99,7 +99,7 @@ class IndexView(generic.TemplateView):
         # prepare blank form
         context = super().get_context_data(**kwargs)
         context['products'] = Products.objects.all()
-        context['form_single'] = ProductForm()
+        context['form_single'] = SingleRegistrationForm()
         context['form_csv'] = UploadCSVForm()
         context['editablelist'] = Products.objects.order_by('id')[:5]
         context['editableform'] = EditForm()

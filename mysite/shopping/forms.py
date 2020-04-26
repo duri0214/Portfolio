@@ -2,12 +2,16 @@
 from django import forms
 from .models import Products
 
-class ProductForm(forms.ModelForm):
-    """ ProductForm """
+class SingleRegistrationForm(forms.ModelForm):
+    """ SingleRegistrationForm """
     class Meta:
         """Meta"""
         model = Products
         fields = ('code', 'name', 'price', 'picture', 'description')
+
+class UploadCSVForm(forms.Form):
+    """ formのname 属性が 'file' になる """
+    file = forms.FileField(required=True, label='')
 
 class EditForm(forms.ModelForm):
     """ EditForm """
@@ -22,7 +26,3 @@ class EditForm(forms.ModelForm):
         """Meta"""
         model = Products
         fields = ('code', 'name', 'price', 'description')
-
-class UploadCSVForm(forms.Form):
-    """ formのname 属性が 'file' になる """
-    file = forms.FileField(required=True, label='')
