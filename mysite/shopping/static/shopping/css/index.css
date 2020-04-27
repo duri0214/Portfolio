@@ -290,6 +290,10 @@ ul.specific_form {
 .edit_data .edit_record td {
     height: 100px;
 }
+.edit_data .edit_record input {
+    position: relative;
+    top: -12px;
+}
 .edit_data .edit_record input[type="text"], .edit_data .edit_record input[type="number"] {
     border-radius: 4px;
     height: 22px;
