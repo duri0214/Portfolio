@@ -19,6 +19,9 @@ function BarChart_stack(chart_id, data){
                     stacked: true,
                     gridLines: {
                         borderDash: [5, 5]
+                    },
+                    ticks: {
+                        max: 6500
                     }
                 }],
             }
