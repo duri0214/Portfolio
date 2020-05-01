@@ -41,6 +41,11 @@ class UploadSingleView(FormView):
         os.rename(orgfilepath, newfilepath)
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        print(form.errors)
+        messages.add_message(self.request, messages.WARNING, form.errors)
+        return redirect('shp:index')
+
 class UploadBulkView(FormView):
     """UploadBulkView"""
     form_class = UploadCSVForm
