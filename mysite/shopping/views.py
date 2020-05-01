@@ -3,12 +3,11 @@ import os
 import io
 import csv
 import json
-from pathlib import Path
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.http.response import JsonResponse
-from django.views import generic
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView, DetailView
+from django.contrib import messages
 from django.urls import reverse_lazy
 import stripe
 from .models import Products, BuyingHistory
@@ -28,8 +27,9 @@ class UploadSingleView(FormView):
         code = form.cleaned_data.get('code')
         orgname, ext = os.path.splitext(form.cleaned_data["picture"].name)
         upload_dir = '/shopping/static/shopping/img/'
+        print('form.cleaned_data["picture"]:', form.cleaned_data["picture"])
         # make dir if not exists the dir
-        Path(settings.BASE_DIR + upload_dir).mkdir(parents=True, exist_ok=True)
+        os.makedirs(settings.BASE_DIR + upload_dir, exist_ok=True)
         # delete if record is exists as same.
         newfilepath = settings.BASE_DIR + upload_dir + code + ext
         if os.path.exists(newfilepath):
@@ -63,7 +63,11 @@ class UploadBulkView(FormView):
                 product.save()
         return super().form_valid(form)
 
-class IndexView(generic.TemplateView):
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.WARNING, form.errors)
+        return redirect('shp:index')
+
+class IndexView(TemplateView):
     """IndexView"""
     template_name = 'shopping/index.html'
     # model = Products
@@ -105,7 +109,7 @@ class IndexView(generic.TemplateView):
         context['editableform'] = EditForm()
         return context
 
-class DetailView(generic.DetailView):
+class ProductDetailView(DetailView):
     """DetailView"""
     template_name = 'shopping/detail.html'
     model = Products

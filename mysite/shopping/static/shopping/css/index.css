@@ -213,8 +213,23 @@ ul.specific_form {
     height: 500px;
 }
 
-.registration input[type="submit"] {
+ul.errorlist {
+    list-style-type: none;
+}
+ul.errorlist li {
+    padding: 10px;
+}
+ul.errorlist ul.errorlist {
+    background: #FFCB72;
+}
+ul.errorlist ul.errorlist li {
+    color: #ff0000;
+}
+
+.marginleft100 {
     margin-left: 100px;
+}
+.registration input[type="submit"] {
     width: 180px;
     border: 2px solid #9ec34b;
     font-size: 16px;
@@ -316,4 +331,17 @@ ul.specific_form {
 }
 .edit_data .edit_record #id_code {
     background-color: lightgray;
+}
+
+#csvformat table {
+    border-collapse: collapse;
+    line-height: 1.5;
+}
+#csvformat th {
+    background-color: gray;
+}
+#csvformat th, #csvformat td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    color: lightgray;
 }
