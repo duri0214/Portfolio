@@ -54,18 +54,19 @@ class UploadBulkView(FormView):
     def form_valid(self, form):
         # prepare
         csvfile = io.TextIOWrapper(form.cleaned_data["file"], encoding='utf-8')
-        # read csv and ignore header
+        # read csv
         reader = csv.reader(csvfile)
+        # ignore header
         next(reader)
-        # upsert
+        # count of insert
         for record in reader:
+            # insert if the record not exists.
             product, created = Products.objects.get_or_create(code=record[0])
-            if not created:
-                product.code = record[0]
-                product.name = record[1]
-                product.price = record[2]
-                product.description = record[3]
-                product.save()
+            product.code = record[0]
+            product.name = record[1]
+            product.price = record[2]
+            product.description = record[3]
+            product.save()
         return super().form_valid(form)
 
     def form_invalid(self, form):
