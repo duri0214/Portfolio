@@ -25,20 +25,17 @@ class UploadSingleView(FormView):
     def form_valid(self, form):
         # prepare
         code = form.cleaned_data.get('code')
-        orgname, ext = os.path.splitext(form.cleaned_data["picture"].name)
-        upload_dir = '/shopping/static/shopping/img/'
-        print('form.cleaned_data["picture"]:', form.cleaned_data["picture"])
-        # make dir if not exists the dir
-        os.makedirs(settings.BASE_DIR + upload_dir, exist_ok=True)
-        # delete if record is exists as same.
-        newfilepath = settings.BASE_DIR + upload_dir + code + ext
-        if os.path.exists(newfilepath):
-            os.remove(newfilepath)
-            Products.objects.filter(code=code).delete()
-        # save and rename
+        Products.objects.filter(code=code).delete()
+        # save
         form.save()
-        orgfilepath = settings.BASE_DIR + upload_dir + orgname + ext
-        os.rename(orgfilepath, newfilepath)
+        # delete if file is exists as same.
+        orgname, ext = os.path.splitext(form.cleaned_data["picture"].name)
+        mvfilepath = settings.BASE_DIR + '/shopping/static/shopping/img/' + code + ext.lower()
+        if os.path.exists(mvfilepath):
+            os.remove(mvfilepath)
+        # move file as rename
+        uploadfilepath = settings.BASE_DIR + '/media/shopping/' + orgname + ext.lower()
+        os.rename(uploadfilepath, mvfilepath)
         return super().form_valid(form)
 
     def form_invalid(self, form):

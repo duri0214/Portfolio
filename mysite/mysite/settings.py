@@ -129,3 +129,7 @@ STRIPE_PUBLIC_KEY = 'pk_test_eiOWUzSaLn51lXt0POuRBskA009JsTTAb5'
 
 # 'django.contrib.humanize' 3桁カンマ
 NUMBER_GROUPING = 3
+
+# これの追記でpermissionerror 回避を確認ok
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -9,7 +9,7 @@ class Products(models.Model):
     name = models.CharField('商品名', max_length=200)
     price = models.IntegerField('金額', default=0)
     description = models.TextField('説明')
-    picture = models.ImageField('商品写真', upload_to='shopping/static/shopping/img/')
+    picture = models.ImageField('商品写真', upload_to='shopping/')
     created_at = models.DateTimeField(default=timezone.now)
 
 class BuyingHistory(models.Model):
