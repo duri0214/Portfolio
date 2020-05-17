@@ -121,6 +121,9 @@ for key, values in AGG.groupby('symbol'):
     # plot: closing_price
     plt.clf()
     plt.plot(range(len(values)), values['closing_price'], "ro")
+    plt.plot(range(len(values)), values['closing_price'].rolling(20).mean(), "r-", label="20SMA")
+    plt.plot(range(len(values)), values['closing_price'].rolling(40).mean(), "g-", label="40SMA")
+    plt.legend(loc="upper left")
     plt.ylabel('closing_price')
     plt.grid()
     slope_inner = []
