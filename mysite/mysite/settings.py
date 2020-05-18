@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'gmarker.apps.GmarkerConfig',
     'shopping.apps.ShoppingConfig',
     'django.contrib.humanize',
-    # 'linebot.apps.LinebotConfig',
+    'linebot.apps.LinebotConfig',
 ]
 
 MIDDLEWARE = [

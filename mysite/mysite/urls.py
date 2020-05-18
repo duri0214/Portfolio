@@ -21,5 +21,6 @@ urlpatterns = [
     path('vietnam_research/', include('vietnam_research.urls')),
     path('gmarker/', include('gmarker.urls')),
     path('shopping/', include('shopping.urls')),
+    path('linebot/', include('linebot.urls')),
     path('admin/', admin.site.urls),
 ]
