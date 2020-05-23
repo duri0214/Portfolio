@@ -1,0 +1,12 @@
+body {
+    padding-top: 70px;
+  }
+  
+  .home {
+    display: table-cell !important;
+  }
+  
+  .list {
+    width: 240px;
+    height: 100%;
+  }

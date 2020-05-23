@@ -22,5 +22,7 @@ urlpatterns = [
     path('gmarker/', include('gmarker.urls')),
     path('shopping/', include('shopping.urls')),
     path('linebot/', include('linebot.urls')),
+    path("kanban/", include("kanban.urls")),
+    path('kanban/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ]

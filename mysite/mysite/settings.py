@@ -25,7 +25,7 @@ SECRET_KEY = 'wk$)s6c6ss_2&=f-k4h3#hzbtmcsi_&gqsm2trhqq#ts*l1+5#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.henojiya.net', '127.0.0.1']
+ALLOWED_HOSTS = ['www.henojiya.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'shopping.apps.ShoppingConfig',
     'django.contrib.humanize',
     'linebot.apps.LinebotConfig',
+    'kanban.apps.KanbanConfig',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +121,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# login
+LOGIN_REDIRECT_URL = "kanban:home"
+LOGOUT_REDIRECT_URL = "kanban:index"
+LOGIN_URL = "login"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
