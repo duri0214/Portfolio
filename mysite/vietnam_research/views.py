@@ -3,11 +3,15 @@ import json
 from datetime import datetime
 from sqlalchemy import create_engine
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView, UpdateView, CreateView, ListView, DeleteView
+from django.urls import reverse_lazy
 from django.http.response import JsonResponse
+from django.db.models import Count, Case, When, IntegerField
 import pandas as pd
-
-from .forms import WatchelistForm
-from .models import WatchList, Likes
+from .forms import ArticleForm, WatchelistForm
+from .models import WatchList, Likes, Articles
 
 def index(request):
     """いわばhtmlのページ単位の構成物です"""
@@ -219,20 +223,21 @@ def index(request):
             })
         uptrends.append(inner)
 
-    # likes
-    user_id = 1 # todo: where user_id
-    articles = pd.read_sql_query(
-        '''
-        SELECT a.id, a.title, a.note, COALESCE(qry1.is_like, 0) is_like, qry2.likes_cnt
-        FROM vietnam_research_articles a
-            LEFT JOIN (
-                SELECT articles_id, 1 is_like
-                FROM vietnam_research_likes WHERE user_id = {0}) qry1 ON a.id = qry1.articles_id
-            LEFT JOIN (
-                SELECT articles_id, COUNT(user_id) likes_cnt
-                FROM vietnam_research_likes GROUP BY articles_id) qry2 ON a.id = qry2.articles_id
-        ORDER BY a.id;
-        '''.format(user_id), con)
+    # like
+    print('request.user.is_authenticated: ', request.user.is_authenticated, request.user)
+    try:
+        loginid = get_user_model().objects.values('id').get(email=request.user)['id']
+    except get_user_model().DoesNotExist:
+        loginid = None
+    articles = Articles.objects.annotate(likes_cnt=Count('likes'))
+    articles = articles.select_related('user')
+    like_list = Likes.objects.filter(user_id=loginid).values('articles_id')
+    articles = articles.annotate(
+        is_like=Case(
+            When(likes__articles_id__in=like_list, then=1), default=0
+            , output_field=IntegerField()
+        )
+    ).order_by('-created_at')[:3]
 
     # context
     context = {
@@ -252,17 +257,30 @@ def index(request):
     # htmlとして返却します
     return render(request, 'vietnam_research/index.html', context)
 
+from django.contrib.auth.decorators import login_required
+@login_required
 def likes(request, user_id, article_id):
     """いいねボタンをクリック"""
     if request.method == 'POST':
         print(json.loads(request.body), json.loads(request.body).get('status'))
-        query = Likes.objects.filter(user_id=user_id, articles_id=article_id)
+        query = Likes.objects.filter(user=user_id, articles_id=article_id)
         if query.count() == 0:
             likes_tbl = Likes()
-            likes_tbl.user_id = user_id
             likes_tbl.articles_id = article_id
+            likes_tbl.user_id = user_id
             likes_tbl.save()
         else:
             query.delete()
         # responce json
         return JsonResponse({"status" : "responsed by views.py"})
+
+class ArticleCreateView(LoginRequiredMixin, CreateView):
+    """CardCreateView"""
+    model = Articles
+    template_name = "vietnam_research/articles/create.html"
+    form_class = ArticleForm
+    success_url = reverse_lazy("vnm:index")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

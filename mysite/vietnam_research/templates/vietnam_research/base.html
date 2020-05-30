@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43097095-9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-43097095-9');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>VNMビューア</title>
+
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'vietnam_research/css/reset.css' %}"> 
+    <link rel="stylesheet" href="{% static 'vietnam_research/css/index.css' %}"> 
+
+    <!-- chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="{% static 'vietnam_research/js/lineChart.js' %}" charset="utf-8"></script>
+    <script src="{% static 'vietnam_research/js/barChart.js' %}" charset="utf-8"></script>
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3-path.v1.min.js" charset="utf-8"></script>
+    <script src="{% static 'vietnam_research/js/radarChart.js' %}" charset="utf-8"></script>
+
+    <!-- likes -->
+    <script src="{% static 'vietnam_research/js/ajax.js' %}" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>    
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic" rel="stylesheet">
+    <!-- fontawesome -->
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'vietnam_research/images/favicon.ico' %}">
+    
+    <!-- for ajax -->
+    <script>let myurl = {"base": "{% url 'vnm:index' %}", "login": "{% url 'register:login' %}"};</script>
+</head>
+<body>
+    <!-- nav -->
+    <h1></h1>
+    <header>
+        <ul class="right_align">
+            <li class="exlink"><a href="{% url 'vnm:index' %}">VIETNAM</a></li>
+            <li class="exlink"><a href="{% url 'mrk:index' %}">GMARKER</a></li>
+            <li class="exlink"><a href="{% url 'shp:index' %}">SHOPPIN</a></li>
+            {% if user.is_authenticated %}
+                <li class="exlink">{{ user.username }}さん</li>
+            {% else %}
+                <li class="exlink">ゲストさん</li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li class="logout"><a href="{% url 'register:logout' %}">LOGOUT</a></li>
+            {% else %}
+                <li class="logout"><a href="{% url 'register:login' %}">LOGIN</a></li>
+            {% endif %}
+        </ul>
+    </header>
+
+    <div id="main">
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+        <p>© 2019 henojiya. / <a href="https://github.com/duri0214" target="_blank">github portfolio</a></p>
+    </footer>
+
+    <script>
+        var radarChartOptions = {
+            w: 290,
+            h: 350,
+            margin: { top: 50, right: 130, bottom: 50, left: 80 },
+            levels: 5,
+            roundStrokes: true,
+            color: d3.scaleOrdinal().range(['rgb(255,89,0)']), // orange"#ff5900"
+            dotRadius: 3,
+            format: '.1f',
+            legend: { title: '業種別集計', translateX: 150, translateY: 40 },
+            unit: '%'
+        };
+
+        RadarChart(".radarChart1", JSON.parse('{{ industry_count|safe }}'), radarChartOptions);
+        RadarChart(".radarChart2", JSON.parse('{{ industry_cap|safe }}'), radarChartOptions);
+        BarChart_stack("barChart1", JSON.parse('{{ industry_stack|safe }}'));
+        LineChart("vnChart", JSON.parse('{{ vnindex_timeline|safe }}'));
+        LineChart("vnChart_layer", JSON.parse('{{ vnindex_layers|safe }}'));
+    </script>
+
+</body>
+</html>

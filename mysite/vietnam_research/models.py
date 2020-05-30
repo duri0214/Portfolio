@@ -1,5 +1,6 @@
 """このファイル内に、必要なテーブルがすべて定義されます"""
 from django.db import models
+from django.contrib.auth import get_user_model
 
 class Industry(models.Model):
     """
@@ -79,13 +80,14 @@ class BasicInformation(models.Model):
 
 class Articles(models.Model):
     '''記事'''
-    title = models.CharField('title', default='no title', max_length=200)
-    note = models.TextField('text', default='no text')
+    title = models.CharField(verbose_name='タイトル', max_length=200)
+    note = models.TextField(verbose_name='投稿内容')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     created_at = models.DateTimeField('公開日時', auto_now_add=True)
 
 class Likes(models.Model):
     '''いいね'''
-    user_id = models.IntegerField(default=0)
     articles = models.ForeignKey('Articles', on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     

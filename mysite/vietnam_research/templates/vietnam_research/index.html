@@ -1,279 +1,195 @@
+{% extends "vietnam_research/base.html" %}
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43097095-9"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-43097095-9');
-    </script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>VNMビューア</title>
-
-    <!-- css -->
-    <link rel="stylesheet" href="{% static 'vietnam_research/css/reset.css' %}"> 
-    <link rel="stylesheet" href="{% static 'vietnam_research/css/index.css' %}"> 
-
-    <!-- chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="{% static 'vietnam_research/js/lineChart.js' %}" charset="utf-8"></script>
-    <script src="{% static 'vietnam_research/js/barChart.js' %}" charset="utf-8"></script>
-
-    <!-- D3.js -->
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-    <script src="https://d3js.org/d3-path.v1.min.js" charset="utf-8"></script>
-    <script src="{% static 'vietnam_research/js/radarChart.js' %}" charset="utf-8"></script>
-
-    <!-- likes -->
-    <script src="{% static 'vietnam_research/js/ajax.js' %}" charset="utf-8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>    
-
-    <!-- font -->
-    <link href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic" rel="stylesheet">
-    <!-- fontawesome -->
-    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
-
-    <!-- favicon -->
-    <link rel="shortcut icon" href="{% static 'vietnam_research/images/favicon.ico' %}">
-    
-    <!-- for ajax -->
-    <script>let myurl = {"base": "{% url 'vnm:index' %}"};</script>
-</head>
-<body>
-    <!-- nav -->
-    <h1></h1>
-    <header>
-        <ul class="right_align">
-            <li class="exlink"><a href="{% url 'vnm:index' %}">VIETNAM</a></li>
-            <li class="exlink"><a href="{% url 'mrk:index' %}">GMARKER</a></li>
-            <li class="exlink"><a href="{% url 'shp:index' %}">SHOPPIN</a></li>
-            <li class="usrname"><span><u>guest</u></span></li>
-            <li class="pptx"><a href="#pptx">pptx資料</a></li>
-            <li class="xlsx"><a href="{% static 'vietnam_research/xlsx/sample.xlsx' %}" onclick='countup();'>xlsx資料</a></li>
-            <li class="logout"><a href="#logout">ログアウト</a></li>
-        </ul>
-    </header>
-
-    <div id="main">
-        <div class="flex-container">
-            <div class="flex-item ratio45">
-                <h2>いいね！機能</h2>
-                {% for idx, row in articles.iterrows %}
-                    <div class="article">
-                        <span class="title">{{ row.title }}</span>
-                        <p>{{ row.note }}</p>
-                        <ul>
-                            <li>
-                                <a role="button" aria-pressed='{{ row.is_like | yesno:"true,false" }}' onclick="likes(event, '1', '{{ row.id }}')">
-                                    いいね！<span>({{ row.likes_cnt }})</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <!-- basicinfo -->
-            <div class="flex-item ratio45 basicinfo">
-                <h2>ベトナム基本情報</h2>
-                <table><tbody>
-                {% for idx, row in basicinfo.iterrows %}
-                    <tr>
-                        <th><p>{{ row.item }}</p></th>
-                        <td><p>{{ row.description }}</p></td>
-                    </tr>
-                {% endfor %}
-                </tbody></table>
-                <p class="note"><a href="https://www.jetro.go.jp/world/asia/vn/stat_01.html">基礎的経済指標（日本貿易振興機構 jetro.go.jp）</a>※IMFデータをもとにSBI証券が作成を参考に</p>
-            </div>
-        </div>
-
-        <!-- todo -->
-        <div class="content-container90 margin-c">
-            <h2>Todo</h2>
-            <ul class="todo">
-                <li><a href="http://www.fao.org/home/en/">FAOから種類別肉さかな消費量のグラフ</a></li>
-                <li>東南アジア各地のグラフで切り替えられるように</li>
-                <li>国の成長期に金融が稼げる理由は？</li>
-                <li>セクター別リターン</li>
-                <li>個社利率</li>
-                <li>配当性向</li>
-                <li>50万円で大口株主になれる先リスト</li>
-                <li>センチメント分析</li>
-                <li>ニュース・有報から上方修正先を抽出</li>
-                <li>この予算（＋手数料）であと何株買えるの？の計算式をフォームで</li>
-                <li>スクレイピング: 上場日</li>
+<div class="flex-container">
+    <div class="flex-item ratio45">
+        <h2>いいね！機能</h2>
+        {% for article in articles %}
+        <div class="article">
+            <span class="title">{{ article.title }}</span>
+            <p>{{ article.note }}</p>
+            <p class="author">{{ article.user.email }}</p>
+            <ul>
+                <li>
+                    <a role="button" aria-pressed='{{ article.is_like | yesno:"true,false" }}' onclick="likes(event, '{{ user.id }}', '{{ article.id }}')">
+                        いいね！<span>({{ article.likes_cnt }})</span>
+                    </a>
+                </li>
             </ul>
         </div>
-
-        <!-- macro by industry -->
-        <div class="content-container90 margin-c">
-            <h2>業種別マクロ分析</h2>
-            <p>これで3年分ぐらいを重ねてみたい</p>
-            <p>足元の鉱業の不調は、かつてベトナムの主力輸出品であった原油の生産量が原油価格低迷に伴い減少したことが主因と見られる。
-                他方、足元で製造業の伸び率が加速している点については、ベトナムに進出した外資系企業による鉄鋼や電機製品などの生産が
-                拡大したことに影響されたと見られる。中国やタイに比べて低いとされてきたベトナムの賃金は、近年、上昇が続いており、
-                ベトナムに進出した日系企業にとって悩みの種となっている。<BR>
-            </p>
-            <div class="flex-container">
-                <div class="flex-item ratio45 c radarChart1"></div>
-                <div class="flex-item ratio45 c radarChart2"></div>
-            </div>
-            <p><a class="note" href="https://www.murc.jp/wp-content/uploads/2018/03/report_180316.pdf">MURCベトナム経済の現状と今後の展望(20180316)</a></p>
-        </div>
-
-        <!-- trading price by industry -->
-        <div class="content-container90 margin-c">
-            <h2>業種別売買代金（10億ドン[÷1,000,000,000]）</h2>
-            <canvas id="barChart1" class="ratio90 margin-c" style="height:400px"></canvas>
-        </div>
-
-        <!-- vn-index -->
-        <div class="content-container90 margin-c">
-            <h2>VN-Index（時系列）</h2>
-            <p>底堅く上昇トレンド</p>
-            <canvas id="vnChart" class="ratio90 margin-c" style="height:300px"></canvas>
-        </div>
-
-        <!-- vn-index layer -->
-        <div class="content-container90 margin-c">
-            <h2>VN-Index（年単位ミルフィーユ）</h2>
-            <p>季節要因は特に感じられない</p>
-            <canvas id="vnChart_layer" class="ratio90 margin-c" style="height:300px"></canvas>
-        </div>
-
-        <!-- exchange -->
-        <div class="content-container90 margin-c">
-            <h2>ドンから日本円へ</h2>
-            ドンを200で割ると、ざっくり日本円になります。
-            1,000don -> 5円
-        </div>
-
-        <!-- top5 -->
-        <div class="content-container90 margin-c">
-            <h2>業種別企業別「売買代金」全期間平均TOP5（SBI証券取り扱い銘柄のみ）</h2>
-            {% for idx, row in top5list.iterrows %}
-                {%if forloop.counter0|divisibleby:"5" %}
-                    <h3>{{ row.ind_name }}</h3>
-                {% endif %}
-                <a href="https://www.viet-kabu.com/{{ row.mkt }}/{{ row.symbol }}.html" target="_blank">
-                    <img src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
-                </a>
-            {% endfor %}
-        </div>
-        
-        <!-- uptrends -->
-        <div class="content-container90 margin-c">
-            <h2>株価直近（14日線/7日線/3日線）上昇銘柄（SBI証券取り扱い銘柄のみ）</h2>
-            <div id="uptrends_wrapper"></div>
-        </div>
-        <script>
-            json = JSON.parse('{{ uptrends|safe }}');
-            var uptrends = document.getElementById('uptrends_wrapper');
-            for (var industry in json) {
-                h3 = document.createElement('h3');
-                h3.textContent = json[industry]['ind_name'];
-                ul = document.createElement("ul");
-                for (var i in json[industry]['datasets']) {
-                    mkt = json[industry]['datasets'][i]['mkt'];
-                    symbol = json[industry]['datasets'][i]['symbol'];
-                    price_latest = json[industry]['datasets'][i]['stocks_price_latest'];
-                    price_delta = json[industry]['datasets'][i]['stocks_price_delta'];
-                    price_delta_sign = Math.sign(price_delta) <0 ? "▲":"＋";
-                    price_delta = Math.abs(price_delta);
-                    img = document.createElement('img');
-                    img.src = "{% static 'vietnam_research/chart_uptrend/' %}" + symbol + ".png";
-                    img.alt = symbol;
-                    a = document.createElement('a');
-                    a.href = "https://www.viet-kabu.com/" + mkt + "/" + symbol + ".html";
-                    a.target = "_blank";
-                    p = document.createElement('p');
-                    p.textContent = symbol + ": " + price_latest + "（" + price_delta_sign + price_delta + "）";
-                    li = document.createElement("li");
-                    li.className = 'uptrends';
-                    a.appendChild(img);
-                    li.appendChild(a);
-                    li.appendChild(p);
-                    ul.appendChild(li);
-                }
-                uptrends.appendChild(h3);
-                uptrends.appendChild(ul);
-            }
-        </script>
-        
-        <!-- watchlist -->
-        <div class="content-container90 margin-c">
-            <h2>ウォッチリスト</h2>
-            <div class="cards">
-                <ul>
-                {% for idx, row in watchlist.iterrows %}
-                    <li>
-                        <section class="card">
-                            <img class="card-img" src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
-                            <div class="card-content">
-                                <h3 class="card-title">{{ row.company_name }}</h3>
-                                <p class="card-text">
-                                    buy date: {{ row.bought_day }}<br>
-                                    buy price: @{{ row.stocks_price }} VND<br>
-                                    buy price: @{{ row.stocks_price_yen }} 円<br>
-                                    now price: @{{ row.closing_price }} VND({{ row.stocks_price_delta }}%)<br>
-                                    buy count: {{ row.stocks_count }}株<br>
-                                    備考：{{ row.buy_price_yen }}円<br>
-                                </p>
-                            </div>
-                            <div class="card-link">
-                                <a href="https://www.viet-kabu.com/{{ row.mkt }}/{{ row.symbol }}.html" target="_blank">link</a>
-                            </div>
-                        </section>
-                    </li>
-                {% endfor %}
-                </ul>
-            </div>
-            <!-- regist to watchlist -->
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="registration">
-                    <ul>{{ form.as_ul }} <li><input type="submit" value="登録"></li></ul>
-                </div>
-            </form>
-        </div>
-
-        <!-- what is PER? -->
-        <div class="content-container90 margin-c">
-            <h2>PERとは</h2>
-            <img src="{% static 'vietnam_research/images/PER.png' %}" alt="PER">
-        </div>
+        {% endfor %}
+        <a href="{% url 'vnm:article_create' %}">投稿</a>
     </div>
-    <footer>
-        <p>© 2019 henojiya. / <a href="https://github.com/duri0214" target="_blank">github portfolio</a></p>
-    </footer>
 
-    <script>
-        var radarChartOptions = {
-            w: 290,
-            h: 350,
-            margin: { top: 50, right: 130, bottom: 50, left: 80 },
-            levels: 5,
-            roundStrokes: true,
-            color: d3.scaleOrdinal().range(['rgb(255,89,0)']), // orange"#ff5900"
-            dotRadius: 3,
-            format: '.1f',
-            legend: { title: '業種別集計', translateX: 150, translateY: 40 },
-            unit: '%'
-        };
+    <!-- basicinfo -->
+    <div class="flex-item ratio45 basicinfo">
+        <h2>ベトナム基本情報</h2>
+        <table><tbody>
+        {% for idx, row in basicinfo.iterrows %}
+            <tr>
+                <th><p>{{ row.item }}</p></th>
+                <td><p>{{ row.description }}</p></td>
+            </tr>
+        {% endfor %}
+        </tbody></table>
+        <p class="note"><a href="https://www.jetro.go.jp/world/asia/vn/stat_01.html">基礎的経済指標（日本貿易振興機構 jetro.go.jp）</a>※IMFデータをもとにSBI証券が作成を参考に</p>
+    </div>
+</div>
 
-        RadarChart(".radarChart1", JSON.parse('{{ industry_count|safe }}'), radarChartOptions);
-        RadarChart(".radarChart2", JSON.parse('{{ industry_cap|safe }}'), radarChartOptions);
-        BarChart_stack("barChart1", JSON.parse('{{ industry_stack|safe }}'));
-        LineChart("vnChart", JSON.parse('{{ vnindex_timeline|safe }}'));
-        LineChart("vnChart_layer", JSON.parse('{{ vnindex_layers|safe }}'));
-    </script>
+<!-- todo -->
+<div class="content-container90 margin-c">
+    <h2>Todo</h2>
+    <ul class="todo">
+        <li><a href="http://www.fao.org/home/en/">FAOから種類別肉さかな消費量のグラフ</a></li>
+        <li>東南アジア各地のグラフで切り替えられるように</li>
+        <li>国の成長期に金融が稼げる理由は？</li>
+        <li>セクター別リターン</li>
+        <li>個社利率</li>
+        <li>配当性向</li>
+        <li>50万円で大口株主になれる先リスト</li>
+        <li>センチメント分析</li>
+        <li>ニュース・有報から上方修正先を抽出</li>
+        <li>この予算（＋手数料）であと何株買えるの？の計算式をフォームで</li>
+        <li>スクレイピング: 上場日</li>
+    </ul>
+</div>
 
-</body>
-</html>
+<!-- macro by industry -->
+<div class="content-container90 margin-c">
+    <h2>業種別マクロ分析</h2>
+    <p>これで3年分ぐらいを重ねてみたい</p>
+    <p>足元の鉱業の不調は、かつてベトナムの主力輸出品であった原油の生産量が原油価格低迷に伴い減少したことが主因と見られる。
+        他方、足元で製造業の伸び率が加速している点については、ベトナムに進出した外資系企業による鉄鋼や電機製品などの生産が
+        拡大したことに影響されたと見られる。中国やタイに比べて低いとされてきたベトナムの賃金は、近年、上昇が続いており、
+        ベトナムに進出した日系企業にとって悩みの種となっている。<BR>
+    </p>
+    <div class="flex-container">
+        <div class="flex-item ratio45 c radarChart1"></div>
+        <div class="flex-item ratio45 c radarChart2"></div>
+    </div>
+    <p><a class="note" href="https://www.murc.jp/wp-content/uploads/2018/03/report_180316.pdf">MURCベトナム経済の現状と今後の展望(20180316)</a></p>
+</div>
+
+<!-- trading price by industry -->
+<div class="content-container90 margin-c">
+    <h2>業種別売買代金（10億ドン[÷1,000,000,000]）</h2>
+    <canvas id="barChart1" class="ratio90 margin-c" style="height:400px"></canvas>
+</div>
+
+<!-- vn-index -->
+<div class="content-container90 margin-c">
+    <h2>VN-Index（時系列）</h2>
+    <p>底堅く上昇トレンド</p>
+    <canvas id="vnChart" class="ratio90 margin-c" style="height:300px"></canvas>
+</div>
+
+<!-- vn-index layer -->
+<div class="content-container90 margin-c">
+    <h2>VN-Index（年単位ミルフィーユ）</h2>
+    <p>季節要因は特に感じられない</p>
+    <canvas id="vnChart_layer" class="ratio90 margin-c" style="height:300px"></canvas>
+</div>
+
+<!-- exchange -->
+<div class="content-container90 margin-c">
+    <h2>ドンから日本円へ</h2>
+    ドンを200で割ると、ざっくり日本円になります。
+    1,000don -> 5円
+</div>
+
+<!-- top5 -->
+<div class="content-container90 margin-c">
+    <h2>業種別企業別「売買代金」全期間平均TOP5（SBI証券取り扱い銘柄のみ）</h2>
+    {% for idx, row in top5list.iterrows %}
+        {%if forloop.counter0|divisibleby:"5" %}
+            <h3>{{ row.ind_name }}</h3>
+        {% endif %}
+        <a href="https://www.viet-kabu.com/{{ row.mkt }}/{{ row.symbol }}.html" target="_blank">
+            <img src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
+        </a>
+    {% endfor %}
+</div>
+
+<!-- uptrends -->
+<div class="content-container90 margin-c">
+    <h2>株価直近（14日線/7日線/3日線）上昇銘柄（SBI証券取り扱い銘柄のみ）</h2>
+    <div id="uptrends_wrapper"></div>
+</div>
+<script>
+    json = JSON.parse('{{ uptrends|safe }}');
+    var uptrends = document.getElementById('uptrends_wrapper');
+    for (var industry in json) {
+        h3 = document.createElement('h3');
+        h3.textContent = json[industry]['ind_name'];
+        ul = document.createElement("ul");
+        for (var i in json[industry]['datasets']) {
+            mkt = json[industry]['datasets'][i]['mkt'];
+            symbol = json[industry]['datasets'][i]['symbol'];
+            price_latest = json[industry]['datasets'][i]['stocks_price_latest'];
+            price_delta = json[industry]['datasets'][i]['stocks_price_delta'];
+            price_delta_sign = Math.sign(price_delta) <0 ? "▲":"＋";
+            price_delta = Math.abs(price_delta);
+            img = document.createElement('img');
+            img.src = "{% static 'vietnam_research/chart_uptrend/' %}" + symbol + ".png";
+            img.alt = symbol;
+            a = document.createElement('a');
+            a.href = "https://www.viet-kabu.com/" + mkt + "/" + symbol + ".html";
+            a.target = "_blank";
+            p = document.createElement('p');
+            p.textContent = symbol + ": " + price_latest + "（" + price_delta_sign + price_delta + "）";
+            li = document.createElement("li");
+            li.className = 'uptrends';
+            a.appendChild(img);
+            li.appendChild(a);
+            li.appendChild(p);
+            ul.appendChild(li);
+        }
+        uptrends.appendChild(h3);
+        uptrends.appendChild(ul);
+    }
+</script>
+
+<!-- watchlist -->
+<div class="content-container90 margin-c">
+    <h2>ウォッチリスト</h2>
+    <div class="cards">
+        <ul>
+        {% for idx, row in watchlist.iterrows %}
+            <li>
+                <section class="card">
+                    <img class="card-img" src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
+                    <div class="card-content">
+                        <h3 class="card-title">{{ row.company_name }}</h3>
+                        <p class="card-text">
+                            buy date: {{ row.bought_day }}<br>
+                            buy price: @{{ row.stocks_price }} VND<br>
+                            buy price: @{{ row.stocks_price_yen }} 円<br>
+                            now price: @{{ row.closing_price }} VND({{ row.stocks_price_delta }}%)<br>
+                            buy count: {{ row.stocks_count }}株<br>
+                            備考：{{ row.buy_price_yen }}円<br>
+                        </p>
+                    </div>
+                    <div class="card-link">
+                        <a href="https://www.viet-kabu.com/{{ row.mkt }}/{{ row.symbol }}.html" target="_blank">link</a>
+                    </div>
+                </section>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <!-- regist to watchlist -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="registration">
+            <ul>{{ form.as_ul }} <li><input type="submit" value="登録"></li></ul>
+        </div>
+    </form>
+</div>
+
+<!-- what is PER? -->
+<div class="content-container90 margin-c">
+    <h2>PERとは</h2>
+    <img src="{% static 'vietnam_research/images/PER.png' %}" alt="PER">
+</div>
+{% endblock %}

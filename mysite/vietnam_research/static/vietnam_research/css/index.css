@@ -57,6 +57,7 @@ header ul {
 }
 header .right_align {
   text-align: right;
+  margin-right: 20px;
 }
 header li {
   display: inline-block;
@@ -204,6 +205,11 @@ footer a:link, footer a:visited { color: white; }
 .article p {
   margin: 20px; 
   padding: 0px;
+}
+.article p.author {
+  font-size: small;
+  text-align: right;
+  color: lightgray;
 }
 
 .basicinfo table {
