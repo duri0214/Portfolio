@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'shopping.apps.ShoppingConfig',
     'django.contrib.humanize',
     'linebot.apps.LinebotConfig',
-    'kanban.apps.KanbanConfig',
+    # 'kanban.apps.KanbanConfig',
+    'amazon.apps.AmazonConfig',
+    'register.apps.RegisterConfig',
 ]
 
 MIDDLEWARE = [
@@ -122,9 +124,20 @@ USE_L10N = True
 USE_TZ = True
 
 # login
-LOGIN_REDIRECT_URL = "kanban:home"
-LOGOUT_REDIRECT_URL = "kanban:index"
-LOGIN_URL = "login"
+LOGIN_URL = 'register:login'
+LOGIN_REDIRECT_URL = 'register:top'
+LOGOUT_REDIRECT_URL = "register:top"
+AUTH_USER_MODEL = 'register.User'
+
+# mail
+with open(BASE_DIR + '/register/api_setting/gmailpw.txt', mode='r', encoding='utf8') as file:
+    GMAILPW = file.read()
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'yoshitakaOkada0214@gmail.com'
+EMAIL_HOST_PASSWORD = GMAILPW
+EMAIL_USE_TLS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
