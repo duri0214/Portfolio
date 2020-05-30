@@ -27,6 +27,5 @@ urlpatterns = [
     path('linebot/', include('linebot.urls')),
     path("kanban/", include("kanban.urls")),
     path('kanban/', include('django.contrib.auth.urls')),
-    path('amazon/', include('amazon.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

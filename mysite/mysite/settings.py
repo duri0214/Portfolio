@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'linebot.apps.LinebotConfig',
     'kanban.apps.KanbanConfig',
-    'amazon.apps.AmazonConfig',
     'register.apps.RegisterConfig',
 ]
 
