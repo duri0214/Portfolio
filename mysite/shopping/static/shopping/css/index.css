@@ -80,25 +80,25 @@ header .usrname span::before {
     font-family: "Font Awesome 5 Free";
     content: '\f4fc';
     font-weight: 900;
-    padding: 9px;
+    padding: 10px;
 }
 header .pptx a::before {
     font-family: "Font Awesome 5 Free";
     content: '\f1c4';
     font-weight: 900;
-    padding: 9px;
+    padding: 10px;
 }
 header .xlsx a::before {
     font-family: "Font Awesome 5 Free";
     content: '\f1c3';
     font-weight: 900;
-    padding: 9px;
+    padding: 10px;
 }
 header .logout a::before {
     font-family: "Font Awesome 5 Free";
     content: '\f2f5';
     font-weight: 900;
-    padding: 9px;
+    padding: 10px;
 }
 header .exlink a::after {
     font-family: "Font Awesome 5 Free";

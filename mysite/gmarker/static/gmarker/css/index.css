@@ -52,7 +52,7 @@ header li {
 }
 header a, header span {
     display: block;
-    padding: 8px;
+    padding: 11px;
     color: #fff;
     text-decoration: none;
     transition: background-color .2s linear;
@@ -112,7 +112,7 @@ footer {
 }
 footer p {
     font-size: small;
-    margin-block-start: 0.4em;
+    margin-block-start: 0.6em;
 }
 footer a:link, footer a:visited { color: white; }
 
