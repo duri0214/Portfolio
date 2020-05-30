@@ -42,11 +42,11 @@
               <a class="nav-link" href="{% url 'kanban:cards_list' %}">カード一覧</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">ログアウト</a>
+              <a class="nav-link" href="{% url 'register:logout' %}">ログアウト</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">ログイン</a>
+              <a class="nav-link" href="{% url 'register:login' %}">ログイン</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'kanban:signup' %}">サインアップ</a>

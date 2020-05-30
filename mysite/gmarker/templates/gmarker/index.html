@@ -37,6 +37,7 @@
                 <li class="exlink"><a href="{% url 'vnm:index' %}">VIETNAM</a></li>
                 <li class="exlink"><a href="{% url 'mrk:index' %}">GMARKER</a></li>
                 <li class="exlink"><a href="{% url 'shp:index' %}">SHOPPIN</a></li>
+                <li class="exlink"><a href="{% url 'kanban:index' %}">KANBAN</a></li>
                 {% if user.is_authenticated %}
                     <li class="exlink">{{ user.username }}さん</li>
                 {% else %}
