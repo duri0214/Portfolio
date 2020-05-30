@@ -1,15 +1,13 @@
 """views.py"""
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, resolve_url, get_object_or_404
-from django.views.generic import DetailView
-from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, UpdateView, CreateView, ListView, DeleteView
+from django.urls import reverse_lazy
 from .forms import UserForm, ListForm, CardForm, CardCreateFromHomeForm
 from .mixins import OnlyYouMixin
-from django.urls import reverse_lazy
 from . models import List, Card
 
 def index(request):
@@ -33,17 +31,18 @@ def signup(request):
     return render(request, 'kanban/signup.html', context)
 
 class HomeView(LoginRequiredMixin, ListView):
+    """HomeView"""
     model = List
     template_name = "kanban/home.html"
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     """login時しかユーザーページは見れません"""
-    model = User
+    model = get_user_model()
     template_name = "kanban/users/detail.html"
 
 class UserUpdateView(OnlyYouMixin, UpdateView):
     """OnlyYouMixinは自作です（リクエストuseridとログインuseridが一致するか）"""
-    model = User
+    model = get_user_model()
     template_name = "kanban/users/update.html"
     form_class = UserForm
     def get_success_url(self):
@@ -71,18 +70,21 @@ class ListDetailView(LoginRequiredMixin, DetailView):
     template_name = "kanban/lists/detail.html"
 
 class ListUpdateView(LoginRequiredMixin, UpdateView):
+    """ListUpdateView"""
     model = List
     template_name = "kanban/lists/update.html"
     form_class = ListForm
     success_url = reverse_lazy("kanban:home")
 
 class ListDeleteView(LoginRequiredMixin, DeleteView):
+    """ListDeleteView"""
     model = List
     template_name = "kanban/lists/delete.html"
     form_class = ListForm
     success_url = reverse_lazy("kanban:home")
 
 class CardCreateView(LoginRequiredMixin, CreateView):
+    """CardCreateView"""
     model = Card
     template_name = "kanban/cards/create.html"
     form_class = CardForm
@@ -93,27 +95,32 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 class CardListView(LoginRequiredMixin, ListView):
+    """CardListView"""
     model = Card
     template_name = "kanban/cards/list.html"
 
 class CardDetailView(LoginRequiredMixin, DetailView):
+    """CardDetailView"""
     model = Card
     template_name = "kanban/cards/detail.html"
 
 class CardUpdateView(LoginRequiredMixin, UpdateView):
+    """CardUpdateView"""
     model = Card
     template_name = "kanban/cards/update.html"
     success_url = reverse_lazy("kanban:home")
 
 class CardDeleteView(LoginRequiredMixin, DeleteView):
+    """CardDeleteView"""
     model = Card
     template_name = "kanban/cards/delete.html"
     form_class = CardForm
     success_url = reverse_lazy("kanban:home")
 
 class CardCreateFromHomeView(LoginRequiredMixin, CreateView):
+    """CardCreateFromHomeView"""
     model = Card
-    template_name = "kanban/cards/create.html" 
+    template_name = "kanban/cards/create.html"
     form_class = CardCreateFromHomeForm
     success_url = reverse_lazy("kanban:home")
 
