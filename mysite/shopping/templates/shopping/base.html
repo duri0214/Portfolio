@@ -43,13 +43,19 @@
                 <li class="exlink"><a href="{% url 'vnm:index' %}">VIETNAM</a></li>
                 <li class="exlink"><a href="{% url 'mrk:index' %}">GMARKER</a></li>
                 <li class="exlink"><a href="{% url 'shp:index' %}">SHOPPIN</a></li>
-                <li class="usrname"><span><u>guest</u></span></li>
-                <li class="pptx"><a href="#">pptx資料</a></li>
-                <li class="xlsx"><a href="#">xlsx資料</a></li>
-                <li class="logout"><a href="#logout">ログアウト</a></li>
+                {% if user.is_authenticated %}
+                    <li class="exlink">{{ user.username }}さん</li>
+                {% else %}
+                    <li class="exlink">ゲストさん</li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <li class="logout"><a href="{% url 'register:logout' %}">LOGOUT</a></li>
+                {% else %}
+                    <li class="logout"><a href="{% url 'register:login' %}">LOGIN</a></li>
+                {% endif %}
             </ul>
         </header>
-
+    
         <div id="main">
             {% block content %}
             {% endblock %}

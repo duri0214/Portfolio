@@ -55,6 +55,7 @@ header ul {
 }
 header .right_align {
     text-align: right;
+    margin-right: 20px;
 }
 header li {
     display: inline-block;
