@@ -5,13 +5,15 @@ from sqlalchemy import create_engine
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView, UpdateView, CreateView, ListView, DeleteView
+from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.http.response import JsonResponse
 from django.db.models import Count, Case, When, IntegerField
 import pandas as pd
 from .forms import ArticleForm, WatchelistForm
 from .models import WatchList, Likes, Articles
+from django.contrib.auth.decorators import login_required
+
 
 def index(request):
     """いわばhtmlのページ単位の構成物です"""
@@ -24,7 +26,7 @@ def index(request):
             buy_cost = form.cleaned_data['buy_cost']
             buy_stocks = form.cleaned_data['buy_stocks']
             buy_bikou = form.cleaned_data['buy_bikou']
-            # db regist
+            # db register
             watchlist = WatchList()
             watchlist.symbol = buy_symbol
             watchlist.already_has = True
@@ -55,15 +57,14 @@ def index(request):
                 SELECT DATE(MAX(pub_date)) pub_date
                 FROM vietnam_research_industry
             );
-        '''
-        , con)
+        ''', con)
     # aggregation today's details
     industry_count = []
     industry_cap = []
     temp = pd.DataFrame({
-        'cnt_per': \
+        'cnt_per':
             (temp.groupby('ind_name').count() / len(temp))['marketcap'].values.tolist(),
-        'cap_per': \
+        'cap_per':
             (temp.groupby('ind_name').sum() / temp['marketcap'].sum())['marketcap'].values.tolist()
     }, index=list(temp.groupby('ind_name').groups.keys()))
     temp['cnt_per'] = (temp['cnt_per'] * 100).round(1)
@@ -85,18 +86,17 @@ def index(request):
             , industry1
             , truncate(trade_price_of_a_day / 1000000, 2) trade_price_of_a_day
         FROM (
-			SELECT
-				  DATE_FORMAT(pub_date,'%%Y%%m%%d') pub_date
-				, industry1
-				, SUM(trade_price_of_a_day) AS trade_price_of_a_day
-			FROM vietnam_research_industry
-			GROUP BY pub_date, industry1
+            SELECT
+                  DATE_FORMAT(pub_date,'%Y%m%d') pub_date
+                , industry1
+                , SUM(trade_price_of_a_day) AS trade_price_of_a_day
+            FROM vietnam_research_industry
+            GROUP BY pub_date, industry1
         ) Q
         ORDER BY pub_date, industry1;
-        '''
-        , con)
-    industry_pivot = pd.pivot_table(temp, index='pub_date', \
-        columns='industry1', values='trade_price_of_a_day', aggfunc='sum')
+        ''', con)
+    industry_pivot = pd.pivot_table(temp, index='pub_date',
+                                    columns='industry1', values='trade_price_of_a_day', aggfunc='sum')
     industry_stack = {"labels": list(industry_pivot.index), "datasets": []}
     colors = ['#7b9ad0', '#f8e352', '#c8d627', '#d5848b', '#e5ab47']
     colors.extend(['#e1cea3', '#51a1a2', '#b1d7e4', '#66b7ec', '#c08e47', '#ae8dbc'])
@@ -113,8 +113,7 @@ def index(request):
         SELECT DISTINCT Y, M, closing_price
         FROM vietnam_research_vnindex
         ORDER BY Y, M;
-        '''
-        , con)
+        ''', con)
     # vnindex: simple timeline
     vnindex_timeline = {"labels": list(temp['Y'] + temp['M']), "datasets": []}
     inner = {"label": 'VN-Index', "data": list(temp['closing_price'])}
@@ -130,35 +129,34 @@ def index(request):
     # watchlist
     watchelist = pd.read_sql_query(
         '''
-		WITH latest AS (
+        WITH latest AS (
             SELECT
                 i.symbol, i.closing_price * 1000 closing_price
             FROM vietnam_research_industry i
             WHERE i.pub_date = (SELECT MAX(i.pub_date) pub_date FROM vietnam_research_industry i)
         )
-		SELECT DISTINCT
-			CASE
-				WHEN market_code = "HOSE" THEN "hcm"
-				WHEN market_code = "HNX" THEN "hn"
-			END mkt
-			, w.symbol
-			, LEFT(CONCAT(i.industry1, ': ', i.company_name), 14) AS company_name
-			, CONCAT(YEAR(w.bought_day), '/', MONTH(w.bought_day), '/',
-				DAY(w.bought_day)) AS bought_day
-			, FORMAT(w.stocks_price, 0) AS stocks_price
-			, FORMAT(w.stocks_price / 100 / 2, 0) AS stocks_price_yen
-			, FORMAT((w.stocks_price / 100 / 2) * w.stocks_count, 0) AS buy_price_yen
-			, w.stocks_count
-			, i.industry1
-			, FORMAT(latest.closing_price, 0) AS closing_price
-			, ROUND(((latest.closing_price / w.stocks_price) -1) *100, 2) AS stocks_price_delta
-		FROM vietnam_research_watchlist w
-			INNER JOIN vietnam_research_industry i ON w.symbol = i.symbol
-			INNER JOIN latest ON w.symbol = latest.symbol
-		WHERE already_has = 1
+        SELECT DISTINCT
+            CASE
+                WHEN market_code = "HOSE" THEN "hcm"
+                WHEN market_code = "HNX" THEN "hn"
+            END mkt
+            , w.symbol
+            , LEFT(CONCAT(i.industry1, ': ', i.company_name), 14) AS company_name
+            , CONCAT(YEAR(w.bought_day), '/', MONTH(w.bought_day), '/',
+                DAY(w.bought_day)) AS bought_day
+            , FORMAT(w.stocks_price, 0) AS stocks_price
+            , FORMAT(w.stocks_price / 100 / 2, 0) AS stocks_price_yen
+            , FORMAT((w.stocks_price / 100 / 2) * w.stocks_count, 0) AS buy_price_yen
+            , w.stocks_count
+            , i.industry1
+            , FORMAT(latest.closing_price, 0) AS closing_price
+            , ROUND(((latest.closing_price / w.stocks_price) -1) *100, 2) AS stocks_price_delta
+        FROM vietnam_research_watchlist w
+            INNER JOIN vietnam_research_industry i ON w.symbol = i.symbol
+            INNER JOIN latest ON w.symbol = latest.symbol
+        WHERE already_has = 1
         ORDER BY bought_day;
-        '''
-        , con)
+        ''', con)
 
     # basicinfo
     basicinfo = pd.read_sql_query(
@@ -168,8 +166,7 @@ def index(request):
             , b.description
         FROM vietnam_research_basicinformation b
         ORDER BY b.id;
-        '''
-        , con)
+        ''', con)
 
     # top5
     top5 = pd.read_sql_query(
@@ -181,8 +178,7 @@ def index(request):
                 WHEN market_code = "HNX" THEN "hn"
               END mkt
         FROM vietnam_research_dailytop5;
-        '''
-        , con)
+        ''', con)
     sort_criteria = ['ind_name', 'marketcap', 'per']
     order_criteria = [True, False, False]
     top5 = top5.sort_values(by=sort_criteria[0], ascending=order_criteria[0])
@@ -206,8 +202,7 @@ def index(request):
         FROM vietnam_research_dailyuptrends u INNER JOIN vietnam_research_industry i
             ON u.symbol = i.symbol
         ORDER BY u.ind_name, stocks_price_delta DESC;
-        '''
-        , con)
+        ''', con)
     for groups in temp.groupby('ind_name'):
         # print('\n', groups[0])
         inner = {"ind_name": groups[0], "datasets": []}
@@ -234,8 +229,7 @@ def index(request):
     like_list = Likes.objects.filter(user_id=loginid).values('articles_id')
     articles = articles.annotate(
         is_like=Case(
-            When(likes__articles_id__in=like_list, then=1), default=0
-            , output_field=IntegerField()
+            When(likes__articles_id__in=like_list, then=1), default=0, output_field=IntegerField()
         )
     ).order_by('-created_at')[:3]
 
@@ -257,7 +251,7 @@ def index(request):
     # htmlとして返却します
     return render(request, 'vietnam_research/index.html', context)
 
-from django.contrib.auth.decorators import login_required
+
 @login_required
 def likes(request, user_id, article_id):
     """いいねボタンをクリック"""
@@ -271,8 +265,9 @@ def likes(request, user_id, article_id):
             likes_tbl.save()
         else:
             query.delete()
-        # responce json
-        return JsonResponse({"status" : "responsed by views.py"})
+        # response json
+        return JsonResponse({"status": "responded by views.py"})
+
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     """CardCreateView"""
