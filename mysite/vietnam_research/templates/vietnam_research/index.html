@@ -13,7 +13,7 @@
             <ul>
                 <li>
                     <a role="button" aria-pressed='{{ article.is_like | yesno:"true,false" }}' onclick="likes(event, '{{ user.id }}', '{{ article.id }}')">
-                        いいね！<span>({{ article.likes_cnt }})</span>
+                        いいね！いいね！<span>({{ article.likes_cnt }})</span>
                     </a>
                 </li>
             </ul>
