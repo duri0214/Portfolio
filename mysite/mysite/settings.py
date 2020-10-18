@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wk$)s6c6ss_2&=f-k4h3#hzbtmcsi_&gqsm2trhqq#ts*l1+5#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['www.henojiya.net', '127.0.0.1', 'localhost']
 
@@ -124,8 +124,8 @@ USE_TZ = True
 
 # login
 LOGIN_URL = 'register:login'
-LOGIN_REDIRECT_URL = 'register:top'
-LOGOUT_REDIRECT_URL = "register:top"
+LOGIN_REDIRECT_URL = 'vnm:index'
+LOGOUT_REDIRECT_URL = "vnm:index"
 AUTH_USER_MODEL = 'register.User'
 
 # mail

@@ -80,14 +80,12 @@ class UserCreateComplete(generic.TemplateView):
 
         return HttpResponseBadRequest()
 
-class Top(generic.TemplateView):
-    """トップページ"""
-    template_name = 'register/top.html'
 
 class Login(LoginView):
     """ログインページ"""
     template_name = 'register/login.html'
 
+
 class Logout(LogoutView):
     """ログアウトページ"""
-    template_name = 'register/top.html'
+    template_name = 'vietnam_research/top.html'

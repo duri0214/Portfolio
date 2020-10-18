@@ -19,13 +19,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', include('register.urls')),
-    path('vietnam_research/', include('vietnam_research.urls')),
-    path('vietnam_research/', include('django.contrib.auth.urls')),
+    path('', include('vietnam_research.urls')),
+    path('register/', include('register.urls')),
     path('gmarker/', include('gmarker.urls')),
     path('shopping/', include('shopping.urls')),
     path('linebot/', include('linebot.urls')),
     path("kanban/", include("kanban.urls")),
-    path('kanban/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
