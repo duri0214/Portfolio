@@ -84,8 +84,3 @@ class UserCreateComplete(generic.TemplateView):
 class Login(LoginView):
     """ログインページ"""
     template_name = 'register/login.html'
-
-
-class Logout(LogoutView):
-    """ログアウトページ"""
-    template_name = 'vietnam_research/top.html'
