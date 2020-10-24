@@ -2,14 +2,16 @@
 from django import forms
 from .models import Products
 
-class SingleRegistrationForm(forms.ModelForm):
+
+class RegisterFormSingle(forms.ModelForm):
     """ SingleRegistrationForm """
     class Meta:
         """Meta"""
         model = Products
         fields = ('code', 'name', 'price', 'picture', 'description')
 
-class UploadCSVForm(forms.Form):
+
+class RegisterFormBulk(forms.Form):
     """ formのname 属性が 'file' になる """
     file = forms.FileField(required=True, label='')
 
@@ -20,6 +22,7 @@ class UploadCSVForm(forms.Form):
             raise forms.ValidationError('拡張子はcsvのみです')
         return file
 
+
 class EditForm(forms.ModelForm):
     """ EditForm """
     def __init__(self, *args, **kwargs):
@@ -29,6 +32,7 @@ class EditForm(forms.ModelForm):
         self.fields['name'].widget.attrs['width'] = '15%'
         self.fields['price'].widget.attrs['width'] = '10%'
         self.fields['description'].widget.attrs['width'] = '40%'
+
     class Meta:
         """Meta"""
         model = Products

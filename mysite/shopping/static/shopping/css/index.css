@@ -142,6 +142,7 @@ footer a:link, footer a:visited { color: white; }
     background: white;
     border-radius: 5px;
     box-shadow: 0 2px 5px #ccc;
+    margin-top: 20px;
 }
 .card-img {
     display: block;
@@ -161,6 +162,7 @@ footer a:link, footer a:visited { color: white; }
     font-size: 12px;
     line-height: 1.5;
     color: #777;
+    height: 60px;
 }
 .card-link {
     text-align: center;
@@ -229,25 +231,6 @@ ul.errorlist ul.errorlist li {
 
 .marginleft100 {
     margin-left: 100px;
-}
-.registration input[type="submit"] {
-    width: 180px;
-    border: 2px solid #9ec34b;
-    font-size: 16px;
-    color: #9ec34b;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: .4s;
-}
-.registration input[type="submit"]:hover {
-    background-color: #9ec34b;
-    border-color: #cbe585;
-    color: #FFF;
-}
-.registration label {
-    display: block;
-    float: left;
-    width: 100px;
 }
 
 .edit_data table{
@@ -332,17 +315,4 @@ ul.errorlist ul.errorlist li {
 }
 .edit_data .edit_record #id_code {
     background-color: lightgray;
-}
-
-#csvformat table {
-    border-collapse: collapse;
-    line-height: 1.5;
-}
-#csvformat th {
-    background-color: gray;
-}
-#csvformat th, #csvformat td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    color: lightgray;
 }
