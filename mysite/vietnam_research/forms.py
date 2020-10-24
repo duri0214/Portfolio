@@ -2,6 +2,7 @@
 from django import forms
 from .models import Articles
 
+
 class WatchelistForm(forms.Form):
     """ウォッチリスト登録時の入力フォームです"""
 
@@ -45,6 +46,7 @@ class WatchelistForm(forms.Form):
         widget=forms.TextInput(attrs={
             'id': 'buy_bikou'})
     )
+
 
 class ArticleForm(forms.ModelForm):
     """CardForm"""

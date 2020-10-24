@@ -43,6 +43,7 @@ class UploadSingleView(FormView):
         messages.add_message(self.request, messages.WARNING, form.errors)
         return redirect('shp:index')
 
+
 class UploadBulkView(FormView):
     """UploadBulkView"""
     form_class = UploadCSVForm
@@ -69,6 +70,7 @@ class UploadBulkView(FormView):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.WARNING, form.errors)
         return redirect('shp:index')
+
 
 class IndexView(TemplateView):
     """IndexView"""
