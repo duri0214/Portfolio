@@ -87,7 +87,7 @@ def index(request):
             , truncate(trade_price_of_a_day / 1000000, 2) trade_price_of_a_day
         FROM (
             SELECT
-                  DATE_FORMAT(pub_date, '%%Y%%m%%d') pub_date
+                  DATE_FORMAT(pub_date, '%Y%m%d') pub_date
                 , industry1
                 , SUM(trade_price_of_a_day) AS trade_price_of_a_day
             FROM vietnam_research_industry
