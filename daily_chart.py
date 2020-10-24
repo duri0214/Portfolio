@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from PIL import Image
 
+
 def scraping(mkt, symbol, outfolder):
     """
     url先の <div id="chart_search_left"> の <img> を取得する。
@@ -30,6 +31,7 @@ def scraping(mkt, symbol, outfolder):
         urllib.request.urlretrieve(tag_img['src'], outfolder + '/{0}.png'.format(symbol))
         print(symbol)
     time.sleep(4)
+
 
 # mysql
 CON_STR = 'mysql+mysqldb://python:python123@127.0.0.1/pythondb?charset=utf8&use_unicode=1'
@@ -49,8 +51,7 @@ SYMBOLS = pd.read_sql_query(
         i.market_code, w.symbol
     FROM vietnam_research_industry i INNER JOIN vietnam_research_watchlist w
     ON i.symbol = w.symbol;
-    '''
-    , CON)
+    ''', CON)
 for i, row in SYMBOLS.iterrows():
     scraping(row['market_code'], row['symbol'], OUTFOLDER)
 
@@ -71,12 +72,10 @@ AGG = pd.read_sql_query(
         ON i.market_code = s.market_code AND i.symbol = s.symbol
     GROUP BY ind_name, i.market_code, i.symbol
     HAVING per >1;
-    '''
-    , CON)
+    ''', CON)
 # criteria
-CRITERIA = []
-CRITERIA.append({"by": ['trade_price_of_a_day', 'per'], "order": False})
-CRITERIA.append({"by": ['ind_name', 'trade_price_of_a_day', 'per'], "order": [True, False, False]})
+CRITERIA = [{"by": ['trade_price_of_a_day', 'per'], "order": False},
+            {"by": ['ind_name', 'trade_price_of_a_day', 'per'], "order": [True, False, False]}]
 # Sort descending and get top 5
 AGG = AGG.sort_values(by=CRITERIA[0]["by"], ascending=CRITERIA[0]["order"])
 AGG = AGG.groupby('ind_name').head()
@@ -108,13 +107,12 @@ AGG = pd.read_sql_query(
         ON i.industry1 = c.industry1) INNER JOIN vietnam_research_sbi s
         ON i.market_code = s.market_code AND i.symbol = s.symbol
     ORDER BY ind_name, i.symbol, i.pub_date;
-    '''
-    , CON)
+    ''', CON)
 IND_NAMES = []
 MARKET_CODES = []
 SYMBOLS = []
-PRICE_OLDESTS = []
-PRICE_LATESTS = []
+PRICE_OLDEST = []
+PRICE_LATEST = []
 PRICE_DELTAS = []
 for key, values in AGG.groupby('symbol'):
     days = [14, 7, 3]
@@ -161,8 +159,8 @@ for key, values in AGG.groupby('symbol'):
         price_inner.append(values.tail(max(days))['closing_price'].head(1).iloc[0])
         price_inner.append(values.tail(max(days))['closing_price'].tail(1).iloc[0])
         price_inner.append(round(price_inner[1] - price_inner[0], 2))
-        PRICE_OLDESTS.append(price_inner[0])
-        PRICE_LATESTS.append(price_inner[1])
+        PRICE_OLDEST.append(price_inner[0])
+        PRICE_LATEST.append(price_inner[1])
         PRICE_DELTAS.append(price_inner[2])
     print(key, slope_inner, score, price_inner)
 
@@ -170,8 +168,8 @@ AGG = pd.DataFrame({
     'ind_name': IND_NAMES,
     'market_code': MARKET_CODES,
     'symbol': SYMBOLS,
-    'stocks_price_oldest': PRICE_OLDESTS,
-    'stocks_price_latest': PRICE_LATESTS,
+    'stocks_price_oldest': PRICE_OLDEST,
+    'stocks_price_latest': PRICE_LATEST,
     'stocks_price_delta': PRICE_DELTAS
 })
 AGG = AGG.sort_values(['ind_name', 'stocks_price_delta'], ascending=['True', 'False'])

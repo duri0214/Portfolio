@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 from bs4 import BeautifulSoup
 import pandas as pd
 
+
 def scraping(url, mkt):
     """ Market_code, Symbol, company_name, industry1, industry2 """
 
@@ -40,7 +41,7 @@ def scraping(url, mkt):
         temp = tag_tr.find_all('td', class_='table_list_center')
         if temp:
             temp = tag_tr.find_all('td', class_='table_list_center')[0]
-            symbol = re.sub("＊", '', temp.text.strip()) # AAA
+            symbol = re.sub("＊", '', temp.text.strip())  # AAA
             print(symbol)
             symbols.append(symbol)
             company_name.append(temp.a.get('title'))    # アンファット・バイオプラスチック
@@ -105,9 +106,10 @@ def scraping(url, mkt):
             SUBSTR(pub_date, 1, 10) = {quote}{ymd}{quote}'''
     sql = sql.format(market_code=mkt, quote='\'', ymd=ymdhms[:10])
     con.execute(sql)
-    df_summary.to_sql('vietnam_research_industry', con, if_exists='append', index=None)
+    df_summary.to_sql('vietnam_research_industry', con, if_exists='append', index=False)
 
     return df_summary.shape[0]
+
 
 CNT = 0
 
