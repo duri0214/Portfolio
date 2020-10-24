@@ -55,30 +55,8 @@
     </div>
 
     <h2>管理用</h2>
-    <h3>単品登録</h3>
-    <form action="{% url 'shp:regist_single' %}" method="POST" class="registration" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form_single.as_p }}
-        <input class="marginleft100" type="submit" value="登録">
-    </form>
-
-    <h3>CSV登録</h3>
-    <table id="csvformat">
-        <thead>
-            <tr><th>code</th><th>name</th><th>price</th><th>description</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>beer2</td><td>アサヒスーパードライ</td><td>302</td><td>缶　３５０ｍｌ</td></tr>
-            <tr><td>beer3</td><td>アサヒスーパードライ</td><td>303</td><td>缶　３５０ｍｌ</td></tr>
-            <tr><td>beer4</td><td>アサヒスーパードライ</td><td>304</td><td>缶　３５０ｍｌ</td></tr>
-            <tr><td>beer5</td><td>アサヒスーパードライ</td><td>305</td><td>缶　３５０ｍｌ</td></tr>
-        </tbody>
-    </table>
-    <form action="{% url 'shp:regist_bulk' %}" method="POST" class="registration" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form_csv.as_p }}
-        <input type="submit" value="UPLOAD">
-    </form>
+    <a href="{% url 'shp:register_single' %}">単品登録</a>
+    <a href="{% url 'shp:register_bulk' %}">CSV登録</a>
 
     <h3>編集</h3>
     <div class="edit_data">

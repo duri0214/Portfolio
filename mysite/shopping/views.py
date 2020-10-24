@@ -6,36 +6,40 @@ import json
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.http.response import JsonResponse
-from django.views.generic import FormView, TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, CreateView, FormView
 from django.contrib import messages
 from django.urls import reverse_lazy
 import stripe
 from .models import Products, BuyingHistory
-from .forms import SingleRegistrationForm, UploadCSVForm, EditForm
+from .forms import EditForm, RegisterFormSingle, RegisterFormBulk
 
 # read APIKEY
 with open(settings.BASE_DIR + '/shopping/api_setting/apikey.txt', mode='r') as file:
     stripe.api_key = file.read()
 
-class UploadSingleView(FormView):
+
+class UploadSingleView(CreateView):
     """UploadSingleView"""
-    form_class = SingleRegistrationForm
+    model = Products
+    template_name = "shopping/product/register_single.html"
+    form_class = RegisterFormSingle
     success_url = reverse_lazy('shp:index')
 
     def form_valid(self, form):
         # prepare
         code = form.cleaned_data.get('code')
+        # delete if old exists for db
         Products.objects.filter(code=code).delete()
-        # save
         form.save()
-        # delete if file is exists as same.
-        orgname, ext = os.path.splitext(form.cleaned_data["picture"].name)
-        mvfilepath = settings.BASE_DIR + '/shopping/static/shopping/img/' + code + ext.lower()
-        if os.path.exists(mvfilepath):
-            os.remove(mvfilepath)
-        # move file as rename
-        uploadfilepath = settings.BASE_DIR + '/media/shopping/' + orgname + ext.lower()
-        os.rename(uploadfilepath, mvfilepath)
+        # e.g. filename: apple, ext: .png
+        filename, ext = os.path.splitext(form.cleaned_data["picture"].name)
+        # delete if old exists for file
+        move_to = settings.STATIC_ROOT + '/shopping/img/' + code + ext.lower()
+        if os.path.exists(move_to):
+            os.remove(move_to)
+        # move file from media directory
+        move_from = settings.MEDIA_ROOT + '/shopping/' + filename + ext.lower()
+        os.rename(move_from, move_to)
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -46,14 +50,13 @@ class UploadSingleView(FormView):
 
 class UploadBulkView(FormView):
     """UploadBulkView"""
-    form_class = UploadCSVForm
+    template_name = "shopping/product/register_bulk.html"
+    form_class = RegisterFormBulk
     success_url = reverse_lazy('shp:index')
 
     def form_valid(self, form):
-        # prepare
-        csvfile = io.TextIOWrapper(form.cleaned_data["file"], encoding='utf-8')
         # read csv
-        reader = csv.reader(csvfile)
+        reader = csv.reader(io.TextIOWrapper(form.cleaned_data["file"], encoding='utf-8'))
         # ignore header
         next(reader)
         # count of insert
@@ -96,7 +99,7 @@ class IndexView(TemplateView):
         # read
         data = json.loads(request.body)
         data = Products.objects.get(code=data.get('code'))
-        # responce json
+        # response json
         return JsonResponse({
             "code": data.code,
             "name": data.name,
@@ -108,11 +111,10 @@ class IndexView(TemplateView):
         # prepare blank form
         context = super().get_context_data(**kwargs)
         context['products'] = Products.objects.all()
-        context['form_single'] = SingleRegistrationForm()
-        context['form_csv'] = UploadCSVForm()
         context['editablelist'] = Products.objects.order_by('id')[:5]
         context['editableform'] = EditForm()
         return context
+
 
 class ProductDetailView(DetailView):
     """DetailView"""
