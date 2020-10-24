@@ -178,13 +178,7 @@
         {% endfor %}
         </ul>
     </div>
-    <!-- regist to watchlist -->
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="registration">
-            <ul>{{ form.as_ul }} <li><input type="submit" value="登録"></li></ul>
-        </div>
-    </form>
+    <a href="{% url 'vnm:watchlist_register' %}">ウォッチリスト登録</a>
 </div>
 
 <!-- what is PER?? -->
