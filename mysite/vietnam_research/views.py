@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.http.response import JsonResponse
 from django.db.models import Count, Case, When, IntegerField
 import pandas as pd
-from .forms import ArticleForm, WatchelistForm
+from .forms import ArticleForm, WatchlistForm
 from .models import WatchList, Likes, Articles
 from django.contrib.auth.decorators import login_required
 
@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     """いわばhtmlのページ単位の構成物です"""
     if request.method == 'POST':
-        form = WatchelistForm(request.POST)
+        form = WatchlistForm(request.POST)
         if form.is_valid():
             # form data
             buy_symbol = form.cleaned_data['buy_symbol']
@@ -38,7 +38,7 @@ def index(request):
             # redirect
             return redirect('vnm:index')
     else:
-        form = WatchelistForm()
+        form = WatchlistForm()
         form.buy_date = datetime.today().strftime("%Y/%m/%d")
 
     # count by industry, marketcap by industry
@@ -270,12 +270,24 @@ def likes(request, user_id, article_id):
 
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
-    """CardCreateView"""
+    """ArticleCreateView"""
     model = Articles
     template_name = "vietnam_research/articles/create.html"
     form_class = ArticleForm
     success_url = reverse_lazy("vnm:index")
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.user_id = self.request.user.id
+        return super().form_valid(form)
+
+
+class WatchListRegister(CreateView):
+    """WatchListRegister"""
+    model = WatchList
+    template_name = "vietnam_research/watchlist/register.html"
+    form_class = WatchlistForm
+    success_url = reverse_lazy("vnm:index")
+
+    def form_valid(self, form):
+        form.instance.already_has = 1
         return super().form_valid(form)
