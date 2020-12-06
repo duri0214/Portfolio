@@ -236,6 +236,11 @@ def index(request):
         )
     ).order_by('-created_at')[:3]
 
+    # sbi_topics
+    filepath = settings.BASE_DIR + '/vietnam_research/static/vietnam_research/sbi_topics/market_report_fo_em_topic.txt'
+    f = open(filepath, encoding="utf8")
+    sbi_topics = f.read()  # ファイル終端まで全て読んだデータを返す
+    f.close()
 
     # context
     context = {
@@ -247,6 +252,7 @@ def index(request):
         'articles': articles,
         'watchlist': watchelist,
         'basicinfo': basicinfo,
+        'sbi_topics': sbi_topics,
         'top5list': top5,
         'uptrends': json.dumps(uptrends, ensure_ascii=False),
         'form': form
