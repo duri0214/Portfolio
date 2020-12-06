@@ -1,6 +1,9 @@
 """子供のurls.pyがこの処理を呼び出します"""
+import io
 import json
 from datetime import datetime
+
+from django.conf import settings
 from sqlalchemy import create_engine
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
@@ -137,8 +140,8 @@ def index(request):
         )
         SELECT DISTINCT
             CASE
-                WHEN market_code = "HOSE" THEN "hcm"
-                WHEN market_code = "HNX" THEN "hn"
+                WHEN market_code = 'HOSE' THEN 'hcm'
+                WHEN market_code = 'HNX' THEN 'hn'
             END mkt
             , w.symbol
             , LEFT(CONCAT(i.industry1, ': ', i.company_name), 14) AS company_name
@@ -174,8 +177,8 @@ def index(request):
         SELECT
             *
             , CASE
-                WHEN market_code = "HOSE" THEN "hcm"
-                WHEN market_code = "HNX" THEN "hn"
+                WHEN market_code = 'HOSE' THEN 'hcm'
+                WHEN market_code = 'HNX' THEN 'hn'
               END mkt
         FROM vietnam_research_dailytop5;
         ''', con)
@@ -190,8 +193,8 @@ def index(request):
         SELECT DISTINCT
               u.ind_name
             , CASE
-                WHEN u.market_code = "HOSE" THEN "hcm"
-                WHEN u.market_code = "HNX" THEN "hn"
+                WHEN u.market_code = 'HOSE' THEN 'hcm'
+                WHEN u.market_code = 'HNX' THEN 'hn'
               END mkt
             , u.symbol
             , i.industry1
@@ -233,6 +236,12 @@ def index(request):
         )
     ).order_by('-created_at')[:3]
 
+    # sbi_topics
+    filepath = settings.BASE_DIR + '/vietnam_research/static/vietnam_research/sbi_topics/market_report_fo_em_topic.txt'
+    f = open(filepath, encoding="utf8")
+    sbi_topics = f.read()  # ファイル終端まで全て読んだデータを返す
+    f.close()
+
     # context
     context = {
         'industry_count': json.dumps(industry_count, ensure_ascii=False),
@@ -243,6 +252,7 @@ def index(request):
         'articles': articles,
         'watchlist': watchelist,
         'basicinfo': basicinfo,
+        'sbi_topics': sbi_topics,
         'top5list': top5,
         'uptrends': json.dumps(uptrends, ensure_ascii=False),
         'form': form
