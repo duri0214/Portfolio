@@ -86,6 +86,9 @@ DATABASES = {
         'NAME': 'pythondb',
         'USER': 'python',
         'PASSWORD': 'python123',
+        'TEST': {
+            'NAME': 'test_portfolio',
+        },
     }
 }
 

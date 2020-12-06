@@ -1,3 +1,94 @@
+from django.http import HttpRequest
+from django.template.loader import render_to_string
 from django.test import TestCase
+from django.urls import resolve
+from django.utils.timezone import now
 
-# Create your tests here.
+from .forms import WatchlistForm
+from .models import Industry
+from .views import index
+
+
+class IndustryModelTests(TestCase):
+    def test_is_empty(self):
+        """ test No.1: テーブルは0件です"""
+        saved_industry = Industry.objects.all()
+        self.assertEqual(saved_industry.count(), 0)
+
+    def test_is_not_empty(self):
+        """test No.2: 1つ登録すれば保存されたレコード数は1"""
+        industry = Industry()
+        industry.pub_date = now()
+        industry.save()
+        saved_industries = Industry.objects.all()
+        self.assertEqual(saved_industries.count(), 1)
+
+    def test_saving_and_get_industry(self):
+        """test No.3: 入れる前のデータと入れたあとのデータは等しい"""
+        first_industry = Industry()
+        market_code, symbol, company_name = "HOSE", "AAA", "アンファット・バイオプラスチック"
+        first_industry.market_code = market_code
+        first_industry.symbol = symbol
+        first_industry.company_name = company_name
+        first_industry.pub_date = now()
+        first_industry.save()
+        saved_industries = Industry.objects.all()
+        actual_industry = saved_industries[0]
+        self.assertEqual(actual_industry.market_code, market_code)
+        self.assertEqual(actual_industry.symbol, symbol)
+        self.assertEqual(actual_industry.company_name, company_name)
+
+
+class UrlResolveTests(TestCase):
+    def test_url_resolves_to_book_list_view(self):
+        """test No.4: /では、indexが呼び出される事を検証"""
+        found = resolve('/')
+        self.assertEqual(found.func, index)
+
+
+# class HtmlTests(TestCase):
+#     def test_book_list_page_returns_correct_html(self):
+#         """test No.5: /では、HTMLを検証"""
+#         request = HttpRequest()
+#         response = index(request)
+#         expected_html = render_to_string('/')
+#         self.assertEqual(response.content.decode(), expected_html)
+
+
+class FormTests(TestCase):
+    def test_valid(self):
+        """test No.6: 正常な入力を行えばエラーにならない"""
+        params = dict(symbol='HOSE', bought_day=now(), stocks_price=1000, stocks_count=500)
+        industry = Industry()
+        form = WatchlistForm(params, instance=industry)
+        self.assertTrue(form.is_valid())
+
+    def test_either1(self):
+        """test No.7: 何も入力しなければエラーになることを検証"""
+        params = dict()
+        industry = Industry()
+        form = WatchlistForm(params, instance=industry)
+        self.assertFalse(form.is_valid())
+
+
+class CanSaveAPostRequestAssert(TestCase):
+    def assertFieldInResponse(self, response, name, page, publisher):
+        self.assertIn(name, response.content.decode())
+        self.assertIn(page, response.content.decode())
+        self.assertIn(publisher, response.content.decode())
+
+
+class CanSaveAPostRequestTests(CanSaveAPostRequestAssert):
+    def post_request(self, name, page, publisher):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['name'] = name
+        request.POST['page'] = page
+        request.POST['publisher'] = publisher
+        return request
+
+    # def test_book_edit_can_save_a_post_request(self):
+    #     name, page, publisher = 'name', 'page', 'publisher'
+    #     request = self.post_request(name, page, publisher)
+    #     response = index(request)
+    #     self.assertFieldInResponse(response, name, page, publisher)

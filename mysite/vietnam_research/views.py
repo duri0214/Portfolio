@@ -1,6 +1,9 @@
 """子供のurls.pyがこの処理を呼び出します"""
+import io
 import json
 from datetime import datetime
+
+from django.conf import settings
 from sqlalchemy import create_engine
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
@@ -137,8 +140,8 @@ def index(request):
         )
         SELECT DISTINCT
             CASE
-                WHEN market_code = "HOSE" THEN "hcm"
-                WHEN market_code = "HNX" THEN "hn"
+                WHEN market_code = 'HOSE' THEN 'hcm'
+                WHEN market_code = 'HNX' THEN 'hn'
             END mkt
             , w.symbol
             , LEFT(CONCAT(i.industry1, ': ', i.company_name), 14) AS company_name
@@ -174,8 +177,8 @@ def index(request):
         SELECT
             *
             , CASE
-                WHEN market_code = "HOSE" THEN "hcm"
-                WHEN market_code = "HNX" THEN "hn"
+                WHEN market_code = 'HOSE' THEN 'hcm'
+                WHEN market_code = 'HNX' THEN 'hn'
               END mkt
         FROM vietnam_research_dailytop5;
         ''', con)
@@ -190,8 +193,8 @@ def index(request):
         SELECT DISTINCT
               u.ind_name
             , CASE
-                WHEN u.market_code = "HOSE" THEN "hcm"
-                WHEN u.market_code = "HNX" THEN "hn"
+                WHEN u.market_code = 'HOSE' THEN 'hcm'
+                WHEN u.market_code = 'HNX' THEN 'hn'
               END mkt
             , u.symbol
             , i.industry1
@@ -232,6 +235,7 @@ def index(request):
             When(likes__articles_id__in=like_list, then=1), default=0, output_field=IntegerField()
         )
     ).order_by('-created_at')[:3]
+
 
     # context
     context = {
