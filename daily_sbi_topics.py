@@ -37,7 +37,7 @@ def edit_text_file(input_folder):
     with open(input_path, encoding='utf-8', mode='w') as txt_output:
         pos = temp.find('【韓国】')
         report_date = temp[:pos-1]
-        report_date = report_date.replace('\n', '') + '\n'
+        report_date = report_date.replace('\n', '') + '\n'  # TODO: 日付と記事の間に改行を入れたい
         pos = temp.find('【ベトナム】')
         temp = temp[pos:]
         temp = temp.replace('\n', '')
