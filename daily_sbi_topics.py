@@ -29,6 +29,24 @@ def convert_pdf_to_text(input_folder):
                     interpreter.process_page(page)
 
 
+def edit_text_file(input_folder):
+    """textを加工"""
+    input_path = input_folder + '/market_report_fo_em_topic.txt'
+    with open(input_path, encoding='utf-8', mode='r') as txt_input:
+        temp = txt_input.read()
+    with open(input_path, encoding='utf-8', mode='w') as txt_output:
+        pos = temp.find('【ベトナム】')
+        temp = temp[pos:]
+        temp = temp.replace('\n', '')
+        pos = temp.find('【インドネシア】')
+        temp = temp[:pos-1]
+        temp = temp.replace('  ▼指数チャート  ', '')
+        pos = temp.find('    ')
+        temp = temp[:pos-1]
+        txt_output.write(temp)
+
+
 work_folder = os.path.dirname(os.path.abspath(__file__)) + '/mysite/vietnam_research/static/vietnam_research/sbi_topics'
 download_pdf(work_folder)
 convert_pdf_to_text(work_folder)
+edit_text_file(work_folder)
