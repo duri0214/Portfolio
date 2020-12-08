@@ -35,6 +35,9 @@ def edit_text_file(input_folder):
     with open(input_path, encoding='utf-8', mode='r') as txt_input:
         temp = txt_input.read()
     with open(input_path, encoding='utf-8', mode='w') as txt_output:
+        pos = temp.find('【韓国】')
+        report_date = temp[:pos-1]
+        report_date = report_date.replace('\n', '')
         pos = temp.find('【ベトナム】')
         temp = temp[pos:]
         temp = temp.replace('\n', '')
@@ -43,7 +46,7 @@ def edit_text_file(input_folder):
         temp = temp.replace('  ▼指数チャート  ', '')
         pos = temp.find('    ')
         temp = temp[:pos-1]
-        txt_output.write(temp)
+        txt_output.write(report_date + '<br>' + temp)
 
 
 work_folder = os.path.dirname(os.path.abspath(__file__)) + '/mysite/vietnam_research/static/vietnam_research/sbi_topics'
