@@ -13,22 +13,30 @@ from django.urls import reverse_lazy
 from django.http.response import JsonResponse
 from django.db.models import Count, Case, When, IntegerField
 import pandas as pd
-from .forms import ArticleForm, WatchlistForm
+from .forms import ArticleForm, WatchlistForm, ExchangeForm
 from .models import WatchList, Likes, Articles
 from django.contrib.auth.decorators import login_required
+
+MINIMUM_FEE_INCLUDING_TAX = 1320000
+
+
+def get_price_including_tax_fee(tax_fee):
+    """最低手数料（税込み）を下回れば最低手数料を返す"""
+    return tax_fee if tax_fee > MINIMUM_FEE_INCLUDING_TAX else MINIMUM_FEE_INCLUDING_TAX
 
 
 def index(request):
     """いわばhtmlのページ単位の構成物です"""
+    exchanged = {}
     if request.method == 'POST':
-        form = WatchlistForm(request.POST)
-        if form.is_valid():
-            # form data
-            buy_symbol = form.cleaned_data['buy_symbol']
-            buy_date = form.cleaned_data['buy_date']
-            buy_cost = form.cleaned_data['buy_cost']
-            buy_stocks = form.cleaned_data['buy_stocks']
-            buy_bikou = form.cleaned_data['buy_bikou']
+        watchlist_form = WatchlistForm(request.POST)
+        if watchlist_form.is_valid():
+            # watchlist_form data
+            buy_symbol = watchlist_form.cleaned_data['buy_symbol']
+            buy_date = watchlist_form.cleaned_data['buy_date']
+            buy_cost = watchlist_form.cleaned_data['buy_cost']
+            buy_stocks = watchlist_form.cleaned_data['buy_stocks']
+            buy_bikou = watchlist_form.cleaned_data['buy_bikou']
             # db register
             watchlist = WatchList()
             watchlist.symbol = buy_symbol
@@ -40,9 +48,28 @@ def index(request):
             watchlist.save()
             # redirect
             return redirect('vnm:index')
+
+        # TODO(為替変換): https://docs.microsoft.com/ja-jp/partner/develop/get-foreign-exchange-rates
+        # https://www.ceccs.co.jp/archives/blog/%E3%80%90%E3%83%97%E3%83%AA%E3%82%B6%E3%83%B3%E3%82%BF%E3%83%BC%E3%80%91-%E7%AC%AC58%E5%9B%9E%EF%BC%89%E5%85%AC%E9%96%8Bapi%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E8%87%AA%E5%8B%95%E9%80%9A%E8%B2%A8
+        exchange_form = ExchangeForm(request.POST)
+        if exchange_form.is_valid():
+            # exchange_form data
+            current_balance = exchange_form.cleaned_data['current_balance']
+            unit_price = exchange_form.cleaned_data['unit_price']
+            quantity = exchange_form.cleaned_data['quantity']
+            # calc
+            exchanged['current_balance'] = current_balance
+            exchanged['unit_price'] = unit_price
+            exchanged['quantity'] = quantity
+            exchanged['price_no_tax'] = unit_price * quantity
+            exchanged['fee'] = get_price_including_tax_fee(tax_fee=exchanged['price_no_tax'] * 0.02)
+            exchanged['total_price'] = exchanged['price_no_tax'] + exchanged['fee']
+            exchanged['deduction_price'] = exchanged['current_balance'] - exchanged['total_price']
+
     else:
-        form = WatchlistForm()
-        form.buy_date = datetime.today().strftime("%Y/%m/%d")
+        exchange_form = ExchangeForm()
+        watchlist_form = WatchlistForm()
+        watchlist_form.buy_date = datetime.today().strftime("%Y/%m/%d")
 
     # count by industry, marketcap by industry
     # mysql
@@ -255,7 +282,9 @@ def index(request):
         'sbi_topics': sbi_topics,
         'top5list': top5,
         'uptrends': json.dumps(uptrends, ensure_ascii=False),
-        'form': form
+        'watchlist_form': watchlist_form,
+        'exchange_form': exchange_form,
+        'exchanged': exchanged,
     }
 
     # htmlとして返却します
