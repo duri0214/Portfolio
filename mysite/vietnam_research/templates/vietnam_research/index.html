@@ -1,7 +1,7 @@
 {% extends "vietnam_research/base.html" %}
 {% block content %}
 {% load static %}
-
+<a href="#exchange">為替計算</a>
 <div class="flex-container">
     <div class="flex-item ratio45">
         <h2>いいね！機能</h2>
@@ -96,13 +96,6 @@
     <canvas id="vnChart_layer" class="ratio90 margin-c" style="height:300px"></canvas>
 </div>
 
-<!-- exchange -->
-<div class="content-container90 margin-c">
-    <h2>ドンから日本円へ</h2>
-    ドンを200で割ると、ざっくり日本円になります。
-    1,000don -> 5円
-</div>
-
 <!-- top5 -->
 <div class="content-container90 margin-c">
     <h2>業種別企業別「売買代金」全期間平均TOP5（SBI証券取り扱い銘柄のみ）</h2>
@@ -123,26 +116,37 @@
 </div>
 <script>
     json = JSON.parse('{{ uptrends|safe }}');
-    var uptrends = document.getElementById('uptrends_wrapper');
-    for (var industry in json) {
+    const uptrends = document.getElementById('uptrends_wrapper');
+    let h3;
+    let ul;
+    let mkt;
+    let price_latest;
+    let symbol;
+    let price_delta;
+    let price_delta_sign;
+    let img;
+    let li;
+    let a;
+    let p;
+    for (const industry in json) {
         h3 = document.createElement('h3');
         h3.textContent = json[industry]['ind_name'];
         ul = document.createElement("ul");
-        for (var i in json[industry]['datasets']) {
+        for (const i in json[industry]['datasets']) {
             mkt = json[industry]['datasets'][i]['mkt'];
             symbol = json[industry]['datasets'][i]['symbol'];
             price_latest = json[industry]['datasets'][i]['stocks_price_latest'];
             price_delta = json[industry]['datasets'][i]['stocks_price_delta'];
-            price_delta_sign = Math.sign(price_delta) <0 ? "▲":"＋";
+            price_delta_sign = Math.sign(price_delta) < 0 ? "▲" : "＋";
             price_delta = Math.abs(price_delta);
             img = document.createElement('img');
-            img.src = "{% static 'vietnam_research/chart_uptrend/' %}" + symbol + ".png";
+            img.src = "{% static 'vietnam_research/chart_uptrend/' %}" + symbol + '.png';
             img.alt = symbol;
             a = document.createElement('a');
-            a.href = "https://www.viet-kabu.com/" + mkt + "/" + symbol + ".html";
+            a.href = "https://www.viet-kabu.com/" + mkt + '/' + symbol + '.html';
             a.target = "_blank";
             p = document.createElement('p');
-            p.textContent = symbol + ": " + price_latest + "（" + price_delta_sign + price_delta + "）";
+            p.textContent = symbol + ': ' + price_latest + '（' + price_delta_sign + price_delta + '）';
             li = document.createElement("li");
             li.className = 'uptrends';
             a.appendChild(img);
@@ -154,6 +158,71 @@
         uptrends.appendChild(ul);
     }
 </script>
+
+<!-- exchange -->
+<div id="exchange" class="content-container90 margin-c">
+    <h2>ドンから日本円へ</h2>
+    ドンを200で割ると、ざっくり日本円になります。1,000don -> 5円<br>
+    <a href="https://search.sbisec.co.jp/v2/popwin/info/stock/foreign_exp.pdf">外国株式取引に関する説明書</a>
+    <table>
+    <tbody>
+        <tr>
+            <th>取引種類</th>
+            <td>インターネット、またはお客様からの電話による現物取引</td>
+        </tr>
+        <tr>
+            <th>価格</th>
+            <td>指値のみ（当日注文のみ）</td>
+        </tr>
+        <tr>
+            <th>取引単位</th>
+            <td>ホーチミン証券取引所（HOSE）：10 株単位<br>
+            ハノイ証券取引所（HNX）:100 株単位<br>
+            売買単位は当社ウェブサイトにてご確認ください。<br>
+            1 注文の上限数量： ホーチミン証券取引所 1,999 単位<br>
+            ハノイ証券取引所 199 単位</td>
+        </tr>
+        <tr>
+            <th>呼値</th>
+            <td>ホーチミン証券取引所（HOSE)銘柄<br>
+             1 万ドン未満 10 ドン刻み<br>
+            1 万ドン以上 5 万ドン未満 50 ドン刻み<br>
+            5 万ドン以上 100 ドン刻み<br>
+            ハノイ証券取引所（HNX）銘柄<br>
+             100 ドン刻み<br>
+            各銘柄の呼値は当社ウェブサイトをご覧ください</td>
+        </tr>
+        <tr>
+            <th>決済方法</th>
+            <td>ベトナムドンによる｢外貨決済｣のみ ※前金制</td>
+        </tr>
+        <tr>
+            <th>制限値幅</th>
+            <td>ホーチミン証券取引所（HOSE）：前営業日終値±7%<br>
+            ハノイ証券取引所（HNX）：前営業日取引平均価格±10%</td>
+        </tr>
+        <tr>
+            <th>注文受付時間・約定日･受渡日</th>
+            <td>インターネットによる注文受付時間は、月曜日～金曜日の場合、00：00-10：00（当日注文）、19：30-24：00（翌立会日注文）です。（いずれも日本時間）土曜日・日曜日は一部の時間を除き、翌立会日に発注する予約注文を受付しております。</td>
+        </tr>
+        <tr>
+            <th>最低手数料</th>
+            <td>約定代金の2%（税込2.2％）<br></br><a href="https://site3.sbisec.co.jp/ETGate/?OutSide=on&_ControlID=WPLETmgR001Control&_DataStoreID=DSWPLETmgR001Control&burl=search_foreign&cat1=foreign&cat2=vn&dir=vn%2F&file=foreign_vn_01.html&getFlg=on#:~:text=%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%8D%E3%83%83%E3%83%88%E3%81%8A%E3%82%88%E3%81%B3%E3%81%8A%E9%9B%BB%E8%A9%B1%E3%81%8B%E3%82%89%E3%81%94%E6%B3%A8%E6%96%87%E5%8F%AF%E8%83%BD%EF%BC%81&text=%E2%80%BB%E5%A3%B2%E5%8D%B4%E4%BB%A3%E9%87%91%E3%81%8C%E6%9C%80%E4%BD%8E,%E3%81%A6%E6%89%8B%E6%95%B0%E6%96%99%E3%81%8C%E6%B1%BA%E3%81%BE%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82" target="_blank">最低手数料：1,200,000ベトナムドン（税込1,320,000ベトナムドン）</a></td>
+        </tr>
+    </tbody>
+    </table>
+    <form method="post">
+        {% csrf_token %}
+        {{ exchange_form.as_p }}
+        <button type="submit" class="">計算</button>
+    </form>
+    {% for item in exchanged.items %}
+        {{ item }},
+    {% endfor %}
+    <a href="https://www.google.com/search?q={{ exchanged.deduction_price }}vnd" target="_blank">{{ exchanged.deduction_price }}(VND)を変換</a><br>
+    <p>TODO: 変換値が1000円ぶんぐらい足りない。なにか追加の手数料があるか？</p>
+
+</div>
 
 <!-- watchlist -->
 <div class="content-container90 margin-c">
