@@ -70,6 +70,22 @@ class FormTests(TestCase):
         form = WatchlistForm(params, instance=industry)
         self.assertFalse(form.is_valid())
 
+    def test_exchange_calc(self):
+        """test No.8: 残高4,029,139VND, 単価50,000, 口数200のときに足りない額は7,290,861"""
+        update_url = '/'
+        # GET the form
+        r = self.client.get(update_url)
+        # retrieve form data as dict
+        form = r.context['exchange_form']
+        # manipulate some data
+        data = form.initial  # form is unbound but contains data
+        data['current_balance'] = 4029139
+        data['unit_price'] = 50000
+        data['quantity'] = 200
+        # POST to the form
+        r = self.client.post(update_url, data)
+        self.assertContains(r, 'q=-7290861vnd')
+
 
 class CanSaveAPostRequestAssert(TestCase):
     def assertFieldInResponse(self, response, name, page, publisher):
