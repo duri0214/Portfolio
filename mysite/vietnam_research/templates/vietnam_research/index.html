@@ -216,9 +216,10 @@
         {{ exchange_form.as_p }}
         <button type="submit" class="">計算</button>
     </form>
-    {% for item in exchanged.items %}
-        {{ item }},
-    {% endfor %}
+    残高(VND): {{ exchanged.current_balance }}<br>
+    @{{ exchanged.unit_price }} * {{ exchanged.quantity }} = {{ exchanged.price_no_fee }}VND<br>
+    手数料(VND): {{ exchanged.fee }}<br>
+    差引残高(VND): {{ exchanged.deduction_price }}<br>
     <a href="https://www.google.com/search?q={{ exchanged.deduction_price }}vnd" target="_blank">{{ exchanged.deduction_price }}(VND)を変換</a><br>
     <p>TODO: 変換値が1000円ぶんぐらい足りない。なにか追加の手数料があるか？</p>
 
