@@ -62,7 +62,7 @@ def index(request):
             exchanged['unit_price'] = unit_price
             exchanged['quantity'] = quantity
             exchanged['price_no_fee'] = unit_price * quantity
-            exchanged['fee'] = get_price_including_tax_fee(tax_fee=exchanged['price_no_fee'] * 0.02)
+            exchanged['fee'] = get_price_including_tax_fee(tax_fee=exchanged['price_no_fee'] * 0.022)
             exchanged['price_in_fee'] = exchanged['price_no_fee'] + exchanged['fee']
             exchanged['deduction_price'] = exchanged['current_balance'] - exchanged['price_in_fee']
 
