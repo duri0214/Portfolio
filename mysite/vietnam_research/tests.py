@@ -5,8 +5,16 @@ from django.urls import resolve
 from django.utils.timezone import now
 
 from .forms import WatchlistForm
+from .market_vietnam import MarketVietnam
 from .models import Industry
 from .views import index
+
+
+class TestAbstract(TestCase):
+    """ test No.1: vietnam market 用のクラスをテストします"""
+    def test_market_vietnam(self):
+        v = MarketVietnam()
+        self.assertEqual('mysql+mysqldb://python:python123@127.0.0.1/pythondb?charset=utf8&use_unicode=1', v._con_str)
 
 
 class IndustryModelTests(TestCase):
@@ -41,14 +49,14 @@ class IndustryModelTests(TestCase):
 
 class UrlResolveTests(TestCase):
     def test_url_resolves_to_book_list_view(self):
-        """test No.4: /では、indexが呼び出される事を検証"""
+        """test No.1: /では、indexが呼び出される事を検証"""
         found = resolve('/')
         self.assertEqual(found.func, index)
 
 
 # class HtmlTests(TestCase):
 #     def test_book_list_page_returns_correct_html(self):
-#         """test No.5: /では、HTMLを検証"""
+#         """test No.1: /では、HTMLを検証"""
 #         request = HttpRequest()
 #         response = index(request)
 #         expected_html = render_to_string('/')
@@ -57,21 +65,21 @@ class UrlResolveTests(TestCase):
 
 class FormTests(TestCase):
     def test_valid(self):
-        """test No.6: 正常な入力を行えばエラーにならない"""
+        """test No.1: 正常な入力を行えばエラーにならない"""
         params = dict(symbol='HOSE', bought_day=now(), stocks_price=1000, stocks_count=500)
         industry = Industry()
         form = WatchlistForm(params, instance=industry)
         self.assertTrue(form.is_valid())
 
     def test_either1(self):
-        """test No.7: 何も入力しなければエラーになることを検証"""
+        """test No.2: 何も入力しなければエラーになることを検証"""
         params = dict()
         industry = Industry()
         form = WatchlistForm(params, instance=industry)
         self.assertFalse(form.is_valid())
 
     def test_exchange_calc(self):
-        """test No.8: 残高4,029,139VND, 単価50,000, 口数200のときに足りない額は7,290,861"""
+        """test No.3: 残高4,029,139VND, 単価50,000, 口数200のときに足りない額は7,290,861"""
         update_url = '/'
         # GET the form
         r = self.client.get(update_url)
