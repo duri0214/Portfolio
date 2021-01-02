@@ -1,14 +1,25 @@
 from django.conf import settings
+from sqlalchemy.engine import Connection
 
 from .market_abstract import MarketAbstract
 import pandas as pd
 
 
+class QueryFactory(object):
+    """Flyweightパターン"""
+    dataframe_store = {}
+    sql_store = {
+        'vnindex': 'SELECT DISTINCT Y, M, closing_price FROM vietnam_research_vnindex ORDER BY Y, M;'
+    }
+
+    def get(self, param: str, con: Connection):
+        if not (param in self.dataframe_store):
+            self.dataframe_store[param] = pd.read_sql_query(self.sql_store.get(param), con)
+        return self.dataframe_store.get(param)
+
+
 class MarketVietnam(MarketAbstract):
     """ベトナムのマーケットを処理します"""
-
-    def __init__(self):
-        self.get_radar_chart_cap = None
 
     def get_sbi_topics(self) -> str:
         filepath = settings.BASE_DIR + '/vietnam_research/static/vietnam_research/sbi_topics/market_report_fo_em_topic.txt'
@@ -63,12 +74,8 @@ class MarketVietnam(MarketAbstract):
 
     def get_national_stock_timeline(self):
         """シンプルな時系列を作成します"""
-        data = pd.read_sql_query(
-            '''
-            SELECT DISTINCT Y, M, closing_price
-            FROM vietnam_research_vnindex
-            ORDER BY Y, M;
-            ''', self._con)
+        query = QueryFactory()
+        data = query.get('vnindex', self._con)
         vnindex_timeline = {"labels": list(data['Y'] + data['M']), "datasets": []}
         inner = {"label": 'VN-Index', "data": list(data['closing_price'])}
         vnindex_timeline["datasets"].append(inner)
@@ -76,12 +83,8 @@ class MarketVietnam(MarketAbstract):
 
     def get_national_stock_layers(self):
         """annual layer"""
-        data = pd.read_sql_query(
-            '''
-            SELECT DISTINCT Y, M, closing_price
-            FROM vietnam_research_vnindex
-            ORDER BY Y, M;
-            ''', self._con)
+        query = QueryFactory()
+        data = query.get('vnindex', self._con)
         vnindex_pivot = data.pivot('Y', 'M', 'closing_price').fillna(0)
         vnindex_layers = {"labels": list(vnindex_pivot.columns.values), "datasets": []}
         for i, yyyy in enumerate(vnindex_pivot.iterrows()):
@@ -162,7 +165,6 @@ class MarketVietnam(MarketAbstract):
             ''', self._con)
         industry_pivot = pd.pivot_table(data, index='pub_date',
                                         columns='industry1', values='trade_price_of_a_day', aggfunc='sum')
-
         industry_stack = {"labels": list(industry_pivot.index), "datasets": []}
         colors = ['#7b9ad0', '#f8e352', '#c8d627', '#d5848b', '#e5ab47']
         colors.extend(['#e1cea3', '#51a1a2', '#b1d7e4', '#66b7ec', '#c08e47', '#ae8dbc'])
