@@ -1,9 +1,6 @@
 """
-指定銘柄のチャートをpngで取得します
-top5のチャートをpngで取得します
-step1: 1企業あたり毎日1明細しかないものを group集計する
-step2: pandasでtop5を抽出し、top5テーブルにinsertしたあとにスクレイピング
-step3: 傾斜を出して、uptrendを抽出
+chart1: WatchListをスクレイピング
+chart2: 傾斜を出して、uptrendを算出
 """
 import os
 import shutil
@@ -37,14 +34,13 @@ def scraping(mkt, symbol, outfolder):
 CON_STR = 'mysql+mysqldb://python:python123@127.0.0.1/pythondb?charset=utf8&use_unicode=1'
 CON = create_engine(CON_STR, echo=False).connect()
 
+
 # chart1: watchlist
 print('watch list')
-# delete old files
 OUTFOLDER = os.path.dirname(os.path.abspath(__file__))
 OUTFOLDER = OUTFOLDER + '/mysite/vietnam_research/static/vietnam_research/chart'
 shutil.rmtree(OUTFOLDER)
 os.mkdir(OUTFOLDER)
-# sql
 SYMBOLS = pd.read_sql_query(
     '''
     SELECT DISTINCT
@@ -55,45 +51,12 @@ SYMBOLS = pd.read_sql_query(
 for i, row in SYMBOLS.iterrows():
     scraping(row['market_code'], row['symbol'], OUTFOLDER)
 
-# chart2: top 5 by industry
-print('\n' + 'top 5')
-# sql
-CON.execute('DELETE FROM vietnam_research_dailytop5')
-AGG = pd.read_sql_query(
-    '''
-    SELECT
-          CONCAT(c.industry_class, '|', i.industry1) AS ind_name
-        , i.market_code
-        , i.symbol
-        , AVG(i.trade_price_of_a_day) AS trade_price_of_a_day
-        , AVG(i.per) AS per
-    FROM (vietnam_research_industry i INNER JOIN vietnam_research_indclass c
-        ON i.industry1 = c.industry1) INNER JOIN vietnam_research_sbi s
-        ON i.market_code = s.market_code AND i.symbol = s.symbol
-    GROUP BY ind_name, i.market_code, i.symbol
-    HAVING per >1;
-    ''', CON)
-# criteria
-CRITERIA = [{"by": ['trade_price_of_a_day', 'per'], "order": False},
-            {"by": ['ind_name', 'trade_price_of_a_day', 'per'], "order": [True, False, False]}]
-# Sort descending and get top 5
-AGG = AGG.sort_values(by=CRITERIA[0]["by"], ascending=CRITERIA[0]["order"])
-AGG = AGG.groupby('ind_name').head()
-# Sort descending and insert table
-AGG = AGG.sort_values(by=CRITERIA[1]["by"], ascending=CRITERIA[1]["order"])
-AGG.to_sql('vietnam_research_dailytop5', CON, if_exists='append', index=None)
-# scraping from top 5 list
-for i, row in AGG.iterrows():
-    scraping(row['market_code'], row['symbol'], OUTFOLDER)
-
-# chart3: uptrend by industry
+# chart2: uptrend by industry
 print('\n' + 'uptrend')
-# delete old files
 OUTFOLDER = os.path.dirname(os.path.abspath(__file__))
 OUTFOLDER = OUTFOLDER + '/mysite/vietnam_research/static/vietnam_research/chart_uptrend'
 shutil.rmtree(OUTFOLDER)
 os.mkdir(OUTFOLDER)
-# sql
 CON.execute('DELETE FROM vietnam_research_dailyuptrends')
 AGG = pd.read_sql_query(
     '''

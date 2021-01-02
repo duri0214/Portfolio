@@ -84,29 +84,15 @@
 
 <!-- vn-index -->
 <div class="content-container90 margin-c">
-    <h2>VN-Index（時系列）</h2>
-    <p>底堅く上昇トレンド</p>
+    <h2>National stock index（国を代表する株価指数の超長期時系列）</h2>
     <canvas id="vnChart" class="ratio90 margin-c" style="height:300px"></canvas>
 </div>
 
-<!-- vn-index layer -->
+<!-- National stock index annual layer -->
 <div class="content-container90 margin-c">
     <h2>VN-Index（年単位ミルフィーユ）</h2>
     <p>季節要因は特に感じられない</p>
     <canvas id="vnChart_layer" class="ratio90 margin-c" style="height:300px"></canvas>
-</div>
-
-<!-- top5 -->
-<div class="content-container90 margin-c">
-    <h2>業種別企業別「売買代金」全期間平均TOP5（SBI証券取り扱い銘柄のみ）</h2>
-    {% for idx, row in top5list.iterrows %}
-        {%if forloop.counter0|divisibleby:"5" %}
-            <h3>{{ row.ind_name }}</h3>
-        {% endif %}
-        <a href="https://www.viet-kabu.com/{{ row.mkt }}/{{ row.symbol }}.html" target="_blank">
-            <img src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
-        </a>
-    {% endfor %}
 </div>
 
 <!-- uptrends -->
