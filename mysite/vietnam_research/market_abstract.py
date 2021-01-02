@@ -24,10 +24,6 @@ class MarketAbstract(metaclass=ABCMeta):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_daily_top5(self):
-        raise NotImplementedError()
-
-    @abstractmethod
     def get_uptrends(self):
         raise NotImplementedError()
 
