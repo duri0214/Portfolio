@@ -11,9 +11,12 @@ class QueryFactory(object):
     sql_store = {
         'vnindex': 'SELECT DISTINCT Y, M, closing_price FROM vietnam_research_vnindex ORDER BY Y, M;',
         'radar_chart': """
-            SELECT CONCAT(c.industry_class, '|', i.industry1) AS ind_name, i.marketcap
+            SELECT
+                CONCAT(c.industry_class, '|', i.industry1) AS ind_name,
+                i.marketcap
             FROM vietnam_research_industry i INNER JOIN vietnam_research_indclass c ON i.industry1 = c.industry1
-            WHERE DATE(pub_date) = (SELECT DATE(MAX(pub_date)) pub_date FROM vietnam_research_industry);"""
+            WHERE DATE(pub_date) = (SELECT DATE(MAX(pub_date)) pub_date FROM vietnam_research_industry);
+        """
     }
 
     def get(self, param: str, con: Connection):
@@ -171,10 +174,14 @@ class MarketVietnam(MarketAbstract):
         return fee if fee > minimum_fee_including_tax else minimum_fee_including_tax
 
     def get_radar_chart_count(self):
+        """業種別企業数の占有率 e.g. 農林水産業 31count ÷ 全部 750count = 0.041333"""
         query = QueryFactory()
         data = query.get('radar_chart', self._con)
+        one_of_category = data.groupby('ind_name').count()
+        all_of_category = len(data)
+        # One を All で割ったあとの marketcap を list で返す（行のラベルは業種名）
         data = pd.DataFrame({
-            'cnt_per': (data.groupby('ind_name').count() / len(data))['marketcap'].values.tolist(),
+            'cnt_per': (one_of_category / all_of_category)['marketcap'].values.tolist()
         }, index=list(data.groupby('ind_name').groups.keys()))
         data['cnt_per'] = (data['cnt_per'] * 100).round(1)
         inner = []
@@ -183,10 +190,14 @@ class MarketVietnam(MarketAbstract):
         return [{"name": '企業数', "axes": inner}]
 
     def get_radar_chart_cap(self):
+        """業種別時価総額の占有率 e.g. 農林水産業 2479.07cap ÷ 全部 174707.13cap = 0.014190"""
         query = QueryFactory()
         data = query.get('radar_chart', self._con)
+        one_of_category = data.groupby('ind_name').sum()
+        all_of_category = data['marketcap'].sum()
+        # One を All で割ったあとの marketcap を list で返す（行のラベルは業種名）
         data = pd.DataFrame({
-            'cap_per': (data.groupby('ind_name').sum() / data['marketcap'].sum())['marketcap'].values.tolist()
+            'cap_per': (one_of_category / all_of_category)['marketcap'].values.tolist()
         }, index=list(data.groupby('ind_name').groups.keys()))
         data['cap_per'] = (data['cap_per'] * 100).round(1)
         inner = []
