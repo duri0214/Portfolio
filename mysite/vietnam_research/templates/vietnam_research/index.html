@@ -95,19 +95,6 @@
     <canvas id="vnChart_layer" class="ratio90 margin-c" style="height:300px"></canvas>
 </div>
 
-<!-- top5 -->
-<div class="content-container90 margin-c">
-    <h2>業種別企業別「売買代金」全期間平均TOP5（SBI証券取り扱い銘柄のみ）</h2>
-    {% for idx, row in top5list.iterrows %}
-        {%if forloop.counter0|divisibleby:"5" %}
-            <h3>{{ row.ind_name }}</h3>
-        {% endif %}
-        <a href="https://www.viet-kabu.com/{{ row.mkt }}/{{ row.symbol }}.html" target="_blank">
-            <img src="{% static 'vietnam_research/chart/' %}{{ row.symbol }}.png" alt="{{ row.symbol }}">
-        </a>
-    {% endfor %}
-</div>
-
 <!-- uptrends -->
 <div class="content-container90 margin-c">
     <h2>株価直近（14日線/7日線/3日線）上昇銘柄（SBI証券取り扱い銘柄のみ）</h2>

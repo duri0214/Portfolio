@@ -97,22 +97,6 @@ class MarketVietnam(MarketAbstract):
         # print('vnindex_pivot: ', vnindex_pivot)
         return vnindex_layers
 
-    def get_daily_top5(self):
-        """daily: 画像スクレイピングした業種別5位"""
-        data = pd.read_sql_query(
-            '''
-            SELECT
-                *
-                , CASE
-                    WHEN market_code = 'HOSE' THEN 'hcm'
-                    WHEN market_code = 'HNX' THEN 'hn'
-                  END mkt
-            FROM vietnam_research_dailytop5;
-            ''', self._con)
-        sort_criteria = ['ind_name', 'marketcap', 'per']
-        order_criteria = [True, False, False]
-        return data.sort_values(by=sort_criteria[0], ascending=order_criteria[0])
-
     def get_uptrends(self):
         """daily: 移動平均チャート"""
         uptrends = []

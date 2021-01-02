@@ -125,7 +125,6 @@ def index(request):
         'basicinfo': mkt.get_basicinfo(),
         'watchlist': mkt.get_watchlist(),
         'sbi_topics': mkt.get_sbi_topics(),
-        'top5list': mkt.get_daily_top5(),
         'uptrends': json.dumps(mkt.get_uptrends(), ensure_ascii=False),
         'watchlist_form': watchlist_form,
         'exchange_form': exchange_form,
