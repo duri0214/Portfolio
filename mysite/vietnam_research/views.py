@@ -87,37 +87,37 @@ def index(request):
     ).order_by('-created_at')[:3]
 
     # today's market summary
-    temp = pd.read_sql_query(
-        '''
-        SELECT
-              CONCAT(c.industry_class, '|', i.industry1) AS ind_name
-            , i.marketcap
-        FROM vietnam_research_industry i INNER JOIN vietnam_research_indclass c ON
-            i.industry1 = c.industry1
-        WHERE DATE(pub_date) = (
-                SELECT DATE(MAX(pub_date)) pub_date
-                FROM vietnam_research_industry
-            );
-        ''', con)
-    temp = pd.DataFrame({
-        'cnt_per': (temp.groupby('ind_name').count() / len(temp))['marketcap'].values.tolist(),
-        'cap_per': (temp.groupby('ind_name').sum() / temp['marketcap'].sum())['marketcap'].values.tolist()
-    }, index=list(temp.groupby('ind_name').groups.keys()))
-    temp['cnt_per'] = (temp['cnt_per'] * 100).round(1)
-    temp['cap_per'] = (temp['cap_per'] * 100).round(1)
-    inner = []
-    for row in temp.iterrows():
-        inner.append({"axis": row[0], "value": row[1]["cnt_per"]})
-    industry_count = [{"name": '企業数', "axes": inner}]
-    inner = []
-    for row in temp.iterrows():
-        inner.append({"axis": row[0], "value": row[1]["cap_per"]})
-    industry_cap = [{"name": '時価総額', "axes": inner}]
+    # temp = pd.read_sql_query(
+    #     '''
+    #     SELECT
+    #           CONCAT(c.industry_class, '|', i.industry1) AS ind_name
+    #         , i.marketcap
+    #     FROM vietnam_research_industry i INNER JOIN vietnam_research_indclass c ON
+    #         i.industry1 = c.industry1
+    #     WHERE DATE(pub_date) = (
+    #             SELECT DATE(MAX(pub_date)) pub_date
+    #             FROM vietnam_research_industry
+    #         );
+    #     ''', con)
+    # temp = pd.DataFrame({
+    #     'cnt_per': (temp.groupby('ind_name').count() / len(temp))['marketcap'].values.tolist(),
+    #     'cap_per': (temp.groupby('ind_name').sum() / temp['marketcap'].sum())['marketcap'].values.tolist()
+    # }, index=list(temp.groupby('ind_name').groups.keys()))
+    # temp['cnt_per'] = (temp['cnt_per'] * 100).round(1)
+    # temp['cap_per'] = (temp['cap_per'] * 100).round(1)
+    # inner = []
+    # for row in temp.iterrows():
+    #     inner.append({"axis": row[0], "value": row[1]["cnt_per"]})
+    # industry_count = [{"name": '企業数', "axes": inner}]
+    # inner = []
+    # for row in temp.iterrows():
+    #     inner.append({"axis": row[0], "value": row[1]["cap_per"]})
+    # industry_cap = [{"name": '時価総額', "axes": inner}]
 
     # context
     context = {
-        'industry_count': json.dumps(industry_count, ensure_ascii=False),
-        'industry_cap': json.dumps(industry_cap, ensure_ascii=False),
+        'industry_count': json.dumps(mkt.get_radar_chart_count(), ensure_ascii=False),
+        'industry_cap': json.dumps(mkt.get_radar_chart_cap(), ensure_ascii=False),
         'industry_stack': json.dumps(mkt.get_industry_stack(), ensure_ascii=False),
         'vnindex_timeline': json.dumps(mkt.get_national_stock_timeline(), ensure_ascii=False),
         'vnindex_layers': json.dumps(mkt.get_national_stock_layers(), ensure_ascii=False),
